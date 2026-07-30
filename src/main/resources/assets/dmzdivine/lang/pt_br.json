@@ -4,6 +4,10 @@
   "race.dragonminez.saiyan.form.divineforms.supersaiyanblue": "SSJ Blue",
   "race.dragonminez.saiyan.form.divineforms.supersaiyanblueevolved": "SSJ Blue Evoluído",
 
+  "race.dragonminez.majin.group.divineforms": "Divina",
+  "race.dragonminez.majin.form.divineforms.demongod": "Deus Demônio",
+  "race.dragonminez.majin.form.divineforms.hakaishin": "Hakaishin",
+
   "gui.dmzdivine.ritual.title": "Ritual do Super Saiyajin Deus",
   "gui.dmzdivine.ritual.instructions": "Aperte ESPAÇO quando o cursor estiver na zona divina!",
   "gui.dmzdivine.ritual.misses": "Falhas: %s/%s",

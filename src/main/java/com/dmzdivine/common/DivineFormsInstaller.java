@@ -35,19 +35,22 @@ public final class DivineFormsInstaller {
     private static final String RESOURCE_ROOT = "/data/dmzdivine/default_configs/";
     private static final Path CONFIG_DIR = FMLPaths.CONFIGDIR.get().resolve("dragonminez");
 
-    /** Form groups shipped by this addon, as race -> config file name (without .json). */
+    /** Form groups shipped by this addon, as race -> config file name (without .json) -> prices. */
     private static final List<FormGroup> SHIPPED_GROUPS = List.of(
-            new FormGroup("saiyan", "divineforms")
+            // Level 1 is -1 on purpose: it makes both purchase paths in the base mod's
+            // UpdateSkillC2S refuse the skill, leaving the ritual as the only way into God. Levels
+            // 2 and 3 are ordinary TP upgrades that unlock Blue and Blue Evolved. Goku sells it since
+            // no base-mod master offers "godforms" at all otherwise (see ensureGodformsOffering).
+            new FormGroup("saiyan", "divineforms", List.of(-1, 200000, 300000), "goku"),
+            // No ritual gates Demon God, so it's an ordinary TP purchase like any other form skill.
+            // Babidi would fit the lore (he created Majin Buu) but can't sell anything: he's in the
+            // base mod's TEXT_MASTERS set, which forces isSkillMaster=false and hides the Skills
+            // button entirely (QuestNPCDialogueScreen.java:51/171) - only a "Services" dialogue
+            // button shows for him, confirmed in-game. King Kai is a real skill master instead.
+            new FormGroup("majin", "divineforms", List.of(500000, 500000), "kingkai")
     );
 
-    /**
-     * TP prices for the godforms skill ladder. Level 1 is {@code -1} on purpose: it makes both
-     * purchase paths in the base mod's UpdateSkillC2S refuse the skill, leaving the ritual as the
-     * only way in. Levels 2 and 3 are ordinary TP upgrades that unlock Blue and Blue Evolved.
-     */
-    private static final List<Integer> GODFORMS_PRICES = List.of(-1, 30000, 50000);
-
-    private record FormGroup(String race, String group) {
+    private record FormGroup(String race, String group, List<Integer> godformsPrices, String master) {
     }
 
     private DivineFormsInstaller() {
@@ -63,7 +66,8 @@ public final class DivineFormsInstaller {
                 continue;
             }
             installFormGroup(shipped.race(), shipped.group());
-            ensureGodformsPrices(shipped.race());
+            ensureGodformsPrices(shipped.race(), shipped.godformsPrices());
+            ensureGodformsOffering(shipped.master());
         }
     }
 
@@ -92,7 +96,7 @@ public final class DivineFormsInstaller {
      * max - so with the base mod's generated empty price list the ritual could never store the
      * unlock. Fill it in when the race defines none.
      */
-    private static void ensureGodformsPrices(String race) {
+    private static void ensureGodformsPrices(String race, List<Integer> godformsPrices) {
         RaceCharacterConfig character = ConfigManager.getRaceCharacter(race);
         if (character == null) return;
         if (character.getFormSkillTpCosts(GodRitual.GODFORMS_SKILL).length > 0) return;
@@ -113,7 +117,7 @@ public final class DivineFormsInstaller {
             }
 
             JsonArray prices = new JsonArray();
-            GODFORMS_PRICES.forEach(prices::add);
+            godformsPrices.forEach(prices::add);
             JsonObject entry = new JsonObject();
             entry.addProperty("buyFromMaster", true);
             entry.add("prices", prices);
@@ -121,10 +125,58 @@ public final class DivineFormsInstaller {
 
             if (ConfigManager.saveRawConfig(relativePath, root.toString())) {
                 ConfigManager.reloadSpecificConfig(relativePath);
-                DMZDivine.LOGGER.info("Added godforms skill prices {} to race '{}'", GODFORMS_PRICES, race);
+                DMZDivine.LOGGER.info("Added godforms skill prices {} to race '{}'", godformsPrices, race);
             }
         } catch (Exception e) {
             DMZDivine.LOGGER.error("Could not add godforms prices to {}: {}", relativePath, e.toString());
+        }
+    }
+
+    /**
+     * A form skill only shows up in a master's Skills screen if that master's entry in
+     * {@code skills.json}'s {@code skillOfferings} lists it (see MastersSkillsScreen#getMasterSkills)
+     * - the price on the race's character.json alone doesn't make it purchasable anywhere. No
+     * base-mod master offers "godforms" by default, so without this the skill has prices but no
+     * seller.
+     */
+    private static void ensureGodformsOffering(String masterName) {
+        try {
+            String json = ConfigManager.getSpecificConfigJson("skills");
+            if (json == null) {
+                DMZDivine.LOGGER.error("Could not read skills.json to add {} as a godforms seller", masterName);
+                return;
+            }
+
+            JsonObject root = JsonParser.parseString(json).getAsJsonObject();
+            JsonObject offerings = root.getAsJsonObject("skillOfferings");
+            if (offerings == null) {
+                offerings = new JsonObject();
+                root.add("skillOfferings", offerings);
+            }
+
+            JsonArray offered = offerings.getAsJsonArray(masterName);
+            if (offered == null) {
+                offered = new JsonArray();
+                offerings.add(masterName, offered);
+            }
+
+            boolean alreadyOffered = false;
+            for (var element : offered) {
+                if (element.isJsonPrimitive() && GodRitual.GODFORMS_SKILL.equalsIgnoreCase(element.getAsString())) {
+                    alreadyOffered = true;
+                    break;
+                }
+            }
+            if (alreadyOffered) return;
+
+            offered.add(GodRitual.GODFORMS_SKILL);
+
+            if (ConfigManager.saveRawConfig("skills", root.toString())) {
+                ConfigManager.reloadSpecificConfig("skills");
+                DMZDivine.LOGGER.info("Added '{}' as a godforms seller", masterName);
+            }
+        } catch (Exception e) {
+            DMZDivine.LOGGER.error("Could not add {} as a godforms seller: {}", masterName, e.toString());
         }
     }
 }

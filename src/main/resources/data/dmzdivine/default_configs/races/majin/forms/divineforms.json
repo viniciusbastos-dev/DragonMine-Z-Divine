@@ -1,0 +1,159 @@
+{
+  "_comment": "Classe Divina Majin - addon. Mesmo formType godforms do Saiyan (o mapeamento pra skill 'godforms' e por formType, nao por raca, entao cada raca guarda sua propria mastery/skill independente). Sem ritual: Demon God e comprado normalmente via TP, como qualquer outra form skill.",
+
+  "configVersion": "2.1.3",
+  "groupName": "divineforms",
+  "formType": "godforms",
+  "forms": {
+    "demongod": {
+      "name": "demongod",
+      "unlockOnSkillLevel": 1,
+
+      "hairType": "base",
+      "hairColor": "",
+      "bodyColor1": "#33104D",
+      "bodyColor2": "#33104D",
+      "eye1Color": "#FF0033",
+      "eye2Color": "#FF0033",
+
+      "auraType": "god",
+      "auraColor": "#8B0000",
+      "auraLayer": 0,
+      "extraAuraLayer": 2,
+      "extraAuraColor": "#2E0854",
+      "extraAuraType": "god",
+
+      "hasLightnings": true,
+      "lightningColor": "#66000A",
+
+      "tintColor": "#2E0854",
+      "tintIntensity": 0.10,
+
+      "outlineShader": {
+        "enabled": false,
+        "primaryColor": "#8B0000",
+        "secondaryColor": "#2E0854",
+        "outlineThickness": 2.0
+      },
+
+      "transformationAnimation": "transf.generic",
+      "customModel": "majin_ultra",
+      "keepBaseFormHeadBones": true,
+      "modelScaling": [1.2, 1.2, 1.2],
+
+      "strMultiplier": 5.5,
+      "skpMultiplier": 5.5,
+      "pwrMultiplier": 5.5,
+      "defMultiplier": 4.0,
+      "stmMultiplier": 1.0,
+      "vitMultiplier": 1.0,
+      "eneMultiplier": 1.0,
+      "speedMultiplier": 1.15,
+      "attackSpeed": 1.15,
+
+      "energyDrain": 0.0,
+      "staminaDrain": 0.0,
+      "healthDrain": 0.0,
+      "staminaDrainMultiplier": 1.0,
+
+      "maxMastery": 100.0,
+      "maxStatsMultiplier": 1.5,
+      "maxCostMultiplier": 0.75,
+      "masteryPerHitDealt": 0.02,
+      "masteryPerHitReceived": 0.02,
+      "passiveMasteryEveryFiveSeconds": 0.003,
+
+      "formRequisite": "pureforms.ultra",
+      "formRequisiteType": "all",
+      "unlockOnMastery": 50.0,
+
+      "instantTransformOnMastery": 40.0,
+      "allowFreeTransformOnMastery": 50.0,
+      "stackOnMastery": 75.0,
+      "formStackable": true,
+      "stackDrainMultiplier": 2.0,
+      "incompatibleWith": [],
+      "shareMasteryWith": [],
+      "shareMasteryMultiplier": 1.0,
+
+      "triggerItemCosts": [],
+      "durationItemCosts": [],
+      "mobEffects": []
+    },
+    "hakaishin": {
+      "name": "hakaishin",
+      "unlockOnSkillLevel": 2,
+
+      "hairType": "base",
+      "hairColor": "",
+      "bodyColor1": "",
+      "bodyColor2": "",
+      "eye1Color": "#FF00FF",
+      "eye2Color": "#FF00FF",
+
+      "auraType": "god",
+      "auraColor": "#FF00FF",
+      "auraLayer": 0,
+      "extraAuraLayer": 2,
+      "extraAuraColor": "#4B0082",
+      "extraAuraType": "god",
+
+      "hasLightnings": true,
+      "lightningColor": "#9D00FF",
+
+      "tintColor": "#9D00FF",
+      "tintIntensity": 0.12,
+
+      "outlineShader": {
+        "enabled": false,
+        "primaryColor": "#FF00FF",
+        "secondaryColor": "#4B0082",
+        "outlineThickness": 2.0
+      },
+
+      "transformationAnimation": "transf.generic",
+      "customModel": "majin_kid",
+      "keepBaseFormHeadBones": true,
+      "modelScaling": [0.7, 0.7, 0.7],
+
+      "strMultiplier": 9.0,
+      "skpMultiplier": 9.0,
+      "pwrMultiplier": 9.0,
+      "defMultiplier": 6.5,
+      "stmMultiplier": 1.0,
+      "vitMultiplier": 1.0,
+      "eneMultiplier": 1.0,
+      "speedMultiplier": 1.3,
+      "attackSpeed": 1.3,
+
+      "energyDrain": 0.30,
+      "staminaDrain": 0.0,
+      "healthDrain": 0.0,
+      "staminaDrainMultiplier": 1.0,
+
+      "maxMastery": 100.0,
+      "maxStatsMultiplier": 1.5,
+      "maxCostMultiplier": 0.15,
+      "masteryPerHitDealt": 0.02,
+      "masteryPerHitReceived": 0.02,
+      "passiveMasteryEveryFiveSeconds": 0.003,
+
+      "formRequisite": "divineforms.demongod",
+      "formRequisiteType": "all",
+      "unlockOnMastery": 100.0,
+
+      "instantTransformOnMastery": 40.0,
+      "allowFreeTransformOnMastery": 50.0,
+      "stackOnMastery": 75.0,
+      "formStackable": true,
+      "stackDrainMultiplier": 2.0,
+      "incompatibleWith": [],
+      "shareMasteryWith": [],
+      "shareMasteryMultiplier": 1.0,
+
+      "triggerItemCosts": [],
+      "durationItemCosts": [],
+      "mobEffects": []
+    }
+  }
+}
