@@ -32,21 +32,22 @@ don't add them as Gradle subprojects, don't copy files wholesale.
     quest-gated form unlocks work (alignment/skill/race/class conditions, mastery-chain backfill on reward).
   - License: **GPL-3.0**. Treat any code copied verbatim from here as copyleft-encumbered.
 
-- **`reference/dragonmine-z-super-addon`** — a real, shipped DMZ addon (adds Ultra Instinct / Ultra Ego).
-  This is the pattern reference for **how to actually build a DMZ addon**:
-  - Uses ~30 Mixins (not just events) to extend base-mod classes: `FormDataMixin` (new fields on
-    `FormData`), `ConfigManagerMixin` / `DefaultFormsFactoryMixin` (registering new config), `MastersSkillsScreenMixin` (custom master offerings), `DMZHairLayerMixin` / `DMZSkinLayerMixin` (render hooks),
-    `TransformationsHelperMixin`, `StackFormModeHandlerMixin`, `UpdateSkillC2SMixin`.
-  - Extends `StatsData` capability data without touching the base mod, via `IStatsDataExtras` /
-    `IResourcesExtras` / `IStatusExtras` interfaces + matching Mixins (duck-typing pattern for adding a new
-    resource, e.g. their "Rage" for Ultra Ego).
-  - Ships a **configurable minigame** (`dmzsuper-minigame.toml`: cursor speed, green-zone width, reaction
-    windows, required successes, allowed failures) gating a skill at level 0 → level 1 for 0 TP. This is the
-    direct precedent for our God-form ritual.
-  - Adds custom master NPCs (`MasterBeerusEntity`, `MasterWhisEntity`) with GeckoLib models and a custom
-    dimension (`data/dmzsuper/dimension/beerus_planet.json`) that the base mod's space pod destinations
-    already reference (`dmzsuper:beerus_planet`) — proof addons can register destinations the base mod
-    recognizes.
+- **`reference/dragonmine-z-super-addon`** — despite the folder name, this is **not a standalone addon**:
+  it's a **fork of the base mod** ("DragonMineZ: Super Expansion" 2.0-beta, modId `dragonminez`, by facub8),
+  built on an older base API (e.g. `setKaiokenStackable` instead of 2.1.3's `formStackable`). Its only
+  mixins target vanilla classes, same as the base mod. Useful as a **design reference** for divine content —
+  translate its ideas into external-addon mechanisms (events/packets against the real 2.1.3 jar), never copy
+  its base-class edits:
+  - `common/config/DefaultFormsFactory.createSaiyanForms` — its God group: SSG (`unlockOnSkillLevel` 1,
+    ×3.5 str/skp/pwr, ×2.5 def, 0.20 ki drain) and SSB (level 3, ×5.0, 0.40 drain), `formType "god"`.
+  - `common/config/SkillsConfig` — its `godform` skill ladder: level 1 cost `-1` ("desbloqueo por comandos
+    o por NPC"), levels 2-5 = 20k-80k TP (drain reductions / SSB unlock).
+  - Note the base mod **2.1.3 already supports god forms natively** (see `reference/dragonminez`):
+    `godforms` is a default form skill in `SkillsConfig`, `TransformationsHelper.getSkillNameForType` maps
+    `formType` containing `godform` → skill `godforms`, and ki sense / lock-on / instant transmission are
+    already gated for divine forms. The base Ultimate ritual (`UltimateChallenge` +
+    `NPCActionC2S("oldkai", 1)` → server validates + `setSkillLevel("ultimate", 1)`) is the canonical
+    minigame-unlock flow our rituals mirror.
   - License: **GPL-3.0**. Same copyleft caveat as above — study the pattern, don't paste the code, unless
     this project is itself released under GPL-3.0.
 
@@ -69,6 +70,10 @@ don't add them as Gradle subprojects, don't copy files wholesale.
 - Prefer a Forge event listener (`DMZEvent`) over a Mixin when either would work; only reach for a Mixin
   when the base mod doesn't fire an event for the hook point needed (that's most of what the reference
   addon uses them for: new fields on existing classes, new capability data, GUI screen edits).
-- The actual in-game JSON configs (races/forms/skills) for the divine transformations already exist and are
-  maintained separately in the player's `config/dragonminez` folder — this addon project is for the code-only
-  pieces JSON can't express, not a place to duplicate that JSON.
+- **The addon ships its own form JSON.** `DivineFormsInstaller` (common setup) writes the bundled groups from
+  `resources/data/dmzdivine/default_configs/` into `config/dragonminez/races/<race>/forms/`, adds the
+  `godforms` skill prices to the race's `character.json`, and hands each file to
+  `ConfigManager.reloadSpecificConfig` so it applies on the same launch. Add new divine groups by dropping a
+  JSON under `default_configs/` and listing it in `SHIPPED_GROUPS` — never by mutating `ConfigManager`'s maps
+  directly, since clients read `SERVER_SYNCED_FORMS` (files the server walks off disk) while connected.
+  Existing files and existing prices are never overwritten; players still own whatever they have edited.

@@ -1,0 +1,239 @@
+{
+  "_comment": "Classe Divina - addon. formType godforms para que a skill seja comprada do Goku (buyFromMaster) sem afetar a linha superforms.",
+  "configVersion": "2.1.3",
+  "groupName": "divineforms",
+  "formType": "godforms",
+  "forms": {
+    "supersaiyangod": {
+      "name": "supersaiyangod",
+      "unlockOnSkillLevel": 1,
+
+      "hairType": "base",
+      "hairColor": "#EE2A5C",
+      "bodyColor2": "#EE2A5C",
+      "eye1Color": "#EE2A5C",
+      "eye2Color": "#EE2A5C",
+
+      "auraType": "god",
+      "auraColor": "#FFB347",
+      "auraLayer": 0,
+      "extraAuraLayer": 2,
+      "extraAuraColor": "#F26418",
+      "extraAuraType": "god",
+
+      "hasLightnings": false,
+      "lightningColor": "",
+
+      "tintColor": "#EE2A5C",
+      "tintIntensity": 0.08,
+
+      "outlineShader": {
+        "enabled": true,
+        "primaryColor": "#8E1230",
+        "secondaryColor": "#F26418",
+        "outlineThickness": 3.0
+      },
+
+      "transformationAnimation": "transf.generic",
+      "customModel": "",
+      "keepBaseFormHeadBones": false,
+      "modelScaling": [0.875, 0.925, 0.875],
+
+      "strMultiplier": 5.5,
+      "skpMultiplier": 5.5,
+      "pwrMultiplier": 5.5,
+      "defMultiplier": 4.0,
+      "stmMultiplier": 1.0,
+      "vitMultiplier": 1.0,
+      "eneMultiplier": 1.0,
+      "speedMultiplier": 1.15,
+      "attackSpeed": 1.15,
+
+      "energyDrain": 0.0,
+      "staminaDrain": 0.0,
+      "healthDrain": 0.0,
+      "staminaDrainMultiplier": 1.0,
+
+      "maxMastery": 100.0,
+      "maxStatsMultiplier": 1.5,
+      "maxCostMultiplier": 0.75,
+      "masteryPerHitDealt": 0.02,
+      "masteryPerHitReceived": 0.02,
+      "passiveMasteryEveryFiveSeconds": 0.003,
+
+      "formRequisite": "supersaiyan.supersaiyan4",
+      "formRequisiteType": "all",
+      "unlockOnMastery": 50.0,
+
+      "instantTransformOnMastery": 40.0,
+      "allowFreeTransformOnMastery": 50.0,
+      "stackOnMastery": 75.0,
+      "formStackable": true,
+      "stackDrainMultiplier": 2.0,
+      "incompatibleWith": ["ultimate.ultimate"],
+      "shareMasteryWith": [],
+      "shareMasteryMultiplier": 1.0,
+
+      "triggerItemCosts": [],
+      "durationItemCosts": [],
+      "mobEffects": [
+        {
+          "effectId": "minecraft:regeneration",
+          "amplifier": 0,
+          "durationTicks": -1,
+          "ambient": true,
+          "visible": false,
+          "showIcon": true
+        }
+      ]
+    },
+    "supersaiyanblue": {
+      "name": "supersaiyanblue",
+      "unlockOnSkillLevel": 2,
+
+      "hairType": "ssj",
+      "hairColor": "#25C4E6",
+      "bodyColor2": "#25C4E6",
+      "eye1Color": "#00D2FF",
+      "eye2Color": "#00D2FF",
+
+      "auraType": "god",
+      "auraColor": "#7FDFFF",
+      "auraLayer": 0,
+      "extraAuraLayer": 2,
+      "extraAuraColor": "#37C6EE",
+      "extraAuraType": "god",
+
+      "hasLightnings": true,
+      "lightningColor": "#B8F0FF",
+
+      "tintColor": "#0044FF",
+      "tintIntensity": 0.08,
+
+      "outlineShader": {
+        "enabled": false,
+        "primaryColor": "#0B6E96",
+        "secondaryColor": "#37C6EE",
+        "outlineThickness": 1.5
+      },
+
+      "transformationAnimation": "transf.generic",
+      "customModel": "",
+      "keepBaseFormHeadBones": false,
+      "modelScaling": [0.925, 0.925, 0.925],
+
+      "strMultiplier": 7.5,
+      "skpMultiplier": 7.5,
+      "pwrMultiplier": 7.5,
+      "defMultiplier": 5.5,
+      "stmMultiplier": 1.0,
+      "vitMultiplier": 1.0,
+      "eneMultiplier": 1.0,
+      "speedMultiplier": 1.2,
+      "attackSpeed": 1.2,
+
+      "energyDrain": 0.25,
+      "staminaDrain": 0.0,
+      "healthDrain": 0.0,
+      "staminaDrainMultiplier": 1.0,
+
+      "maxMastery": 100.0,
+      "maxStatsMultiplier": 1.5,
+      "maxCostMultiplier": 0.10,
+      "masteryPerHitDealt": 0.02,
+      "masteryPerHitReceived": 0.02,
+      "passiveMasteryEveryFiveSeconds": 0.003,
+
+      "formRequisite": "divineforms.supersaiyangod",
+      "formRequisiteType": "all",
+      "unlockOnMastery": 50.0,
+
+      "instantTransformOnMastery": 40.0,
+      "allowFreeTransformOnMastery": 50.0,
+      "stackOnMastery": 75.0,
+      "formStackable": true,
+      "stackDrainMultiplier": 2.0,
+      "incompatibleWith": ["ultimate.ultimate"],
+      "shareMasteryWith": [],
+      "shareMasteryMultiplier": 1.0,
+
+      "triggerItemCosts": [],
+      "durationItemCosts": [],
+      "mobEffects": []
+    },
+    "supersaiyanblueevolved": {
+      "name": "supersaiyanblueevolved",
+      "unlockOnSkillLevel": 3,
+
+      "hairType": "ssj",
+      "hairColor": "#2F8AE0",
+      "bodyColor2": "#2F8AE0",
+      "eye1Color": "#00D2FF",
+      "eye2Color": "#00D2FF",
+
+      "auraType": "god",
+      "auraColor": "#5AA9FF",
+      "auraLayer": 0,
+      "extraAuraLayer": 2,
+      "extraAuraColor": "#1E63C4",
+      "extraAuraType": "god",
+
+      "hasLightnings": true,
+      "lightningColor": "#8FD6FF",
+
+      "tintColor": "#00134D",
+      "tintIntensity": 0.10,
+
+      "outlineShader": {
+        "enabled": true,
+        "primaryColor": "#123F80",
+        "secondaryColor": "#1E63C4",
+        "outlineThickness": 3.0
+      },
+
+      "transformationAnimation": "transf.generic",
+      "customModel": "buffed",
+      "keepBaseFormHeadBones": false,
+      "modelScaling": [1.0, 1.0, 1.0],
+
+      "strMultiplier": 9.0,
+      "skpMultiplier": 9.0,
+      "pwrMultiplier": 9.0,
+      "defMultiplier": 6.5,
+      "stmMultiplier": 1.0,
+      "vitMultiplier": 1.0,
+      "eneMultiplier": 1.0,
+      "speedMultiplier": 1.2,
+      "attackSpeed": 1.25,
+
+      "energyDrain": 0.35,
+      "staminaDrain": 0.0,
+      "healthDrain": 0.0,
+      "staminaDrainMultiplier": 1.0,
+
+      "maxMastery": 100.0,
+      "maxStatsMultiplier": 1.5,
+      "maxCostMultiplier": 0.15,
+      "masteryPerHitDealt": 0.02,
+      "masteryPerHitReceived": 0.02,
+      "passiveMasteryEveryFiveSeconds": 0.003,
+
+      "formRequisite": "divineforms.supersaiyanblue",
+      "formRequisiteType": "all",
+      "unlockOnMastery": 50.0,
+
+      "instantTransformOnMastery": 40.0,
+      "allowFreeTransformOnMastery": 50.0,
+      "stackOnMastery": 75.0,
+      "formStackable": true,
+      "stackDrainMultiplier": 2.0,
+      "incompatibleWith": ["ultimate.ultimate"],
+      "shareMasteryWith": [],
+      "shareMasteryMultiplier": 1.0,
+
+      "triggerItemCosts": [],
+      "durationItemCosts": [],
+      "mobEffects": []
+    }
+  }
+}

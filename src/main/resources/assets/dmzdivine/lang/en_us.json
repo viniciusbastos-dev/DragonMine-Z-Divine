@@ -1,0 +1,20 @@
+{
+  "race.dragonminez.saiyan.group.divineforms": "Divine",
+  "race.dragonminez.saiyan.form.divineforms.supersaiyangod": "SSJ God",
+  "race.dragonminez.saiyan.form.divineforms.supersaiyanblue": "SSJ Blue",
+  "race.dragonminez.saiyan.form.divineforms.supersaiyanblueevolved": "SSJ Blue Evolved",
+
+  "gui.dmzdivine.ritual.title": "Super Saiyan God Ritual",
+  "gui.dmzdivine.ritual.instructions": "Press SPACE when the cursor is inside the divine zone!",
+  "gui.dmzdivine.ritual.misses": "Failures: %s/%s",
+  "gui.dmzdivine.ritual.win": "The divine ki flows through you!",
+  "gui.dmzdivine.ritual.lose": "The ki dispersed... the ritual failed.",
+
+  "message.dmzdivine.ritual.already": "You have already awakened the divine ki.",
+  "message.dmzdivine.ritual.wrong_race": "Your body cannot channel divine ki.",
+  "message.dmzdivine.ritual.form_level": "You are not strong enough yet for the ritual (requires %s level %s).",
+  "message.dmzdivine.ritual.alignment": "The divine ki demands a righteous heart.",
+  "message.dmzdivine.ritual.failed": "The ritual failed. Focus your mind and try again.",
+  "message.dmzdivine.ritual.misconfigured": "The ritual cannot be performed: the server is missing the god form configuration. Ask an admin to check the server log.",
+  "message.dmzdivine.ritual.success": "The ki of five righteous Saiyans flows into you... Super Saiyan God unlocked!"
+}
