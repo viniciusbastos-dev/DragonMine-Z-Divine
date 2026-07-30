@@ -28,6 +28,10 @@ public class DivineConfig {
     public static final ForgeConfigSpec.BooleanValue TRANSFORM_PARTICLES;
     public static final ForgeConfigSpec.ConfigValue<String> TRANSFORM_PARTICLE_COLOR;
     public static final ForgeConfigSpec.IntValue TRANSFORM_BURST_PARTICLES;
+    public static final ForgeConfigSpec.BooleanValue AURA_COLOR_TRANSITION;
+    public static final ForgeConfigSpec.IntValue AURA_COLOR_TRANSITION_TICKS;
+    public static final ForgeConfigSpec.BooleanValue ALIGNMENT_RECOLOR;
+    public static final ForgeConfigSpec.IntValue ALIGNMENT_EVIL_THRESHOLD;
 
     static {
         BUILDER.comment("Divine content shipped by this addon").push("content");
@@ -95,6 +99,22 @@ public class DivineConfig {
         TRANSFORM_BURST_PARTICLES = BUILDER
                 .comment("Particles released in the burst when the god form lands. 0 disables the burst.")
                 .defineInRange("transformBurstParticles", 45, 0, 300);
+        AURA_COLOR_TRANSITION = BUILDER
+                .comment("Ease the aura's own color across a divine transformation (base<->god<->blue<->evolved)",
+                        "instead of it snapping straight to the landed form's color. Covers instant transforms too,",
+                        "not just held charge-ups.")
+                .define("auraColorTransition", true);
+        AURA_COLOR_TRANSITION_TICKS = BUILDER
+                .comment("How long the aura color fade takes, in ticks (20 = 1 second).")
+                .defineInRange("auraColorTransitionTicks", 25, 1, 200);
+        ALIGNMENT_RECOLOR = BUILDER
+                .comment("Recolor Super Saiyan Blue / Blue Evolved into a Super Saiyan Rose - style palette",
+                        "while the player's alignment is evil, reverting to the normal blue once it isn't.")
+                .define("alignmentRecolor", true);
+        ALIGNMENT_EVIL_THRESHOLD = BUILDER
+                .comment("Alignment (0-100) at or below which the Rose recolor applies.",
+                        "Matches the base mod's own good/neutral/evil banding (AlignmentBand: evil <= 40).")
+                .defineInRange("alignmentEvilThreshold", 40, 0, 100);
 
         BUILDER.pop();
     }

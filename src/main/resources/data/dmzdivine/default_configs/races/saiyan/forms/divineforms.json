@@ -9,16 +9,16 @@
       "unlockOnSkillLevel": 1,
 
       "hairType": "base",
-      "hairColor": "#EE2A5C",
-      "bodyColor2": "#EE2A5C",
-      "eye1Color": "#EE2A5C",
-      "eye2Color": "#EE2A5C",
+      "hairColor": "#E51C53",
+      "bodyColor2": "#E51C53",
+      "eye1Color": "#F02861",
+      "eye2Color": "#F02861",
 
       "auraType": "god",
-      "auraColor": "#FFB347",
+      "auraColor": "#FFCC00",
       "auraLayer": 0,
       "extraAuraLayer": 2,
-      "extraAuraColor": "#F26418",
+      "extraAuraColor": "#D6001C",
       "extraAuraType": "god",
 
       "hasLightnings": false,
@@ -92,20 +92,20 @@
       "unlockOnSkillLevel": 2,
 
       "hairType": "ssj",
-      "hairColor": "#25C4E6",
-      "bodyColor2": "#25C4E6",
-      "eye1Color": "#00D2FF",
-      "eye2Color": "#00D2FF",
+      "hairColor": "#3BE4FF",
+      "bodyColor2": "#3BE4FF",
+      "eye1Color": "#00FFD8",
+      "eye2Color": "#00FFD8",
 
       "auraType": "god",
-      "auraColor": "#7FDFFF",
+      "auraColor": "#E2F9FF",
       "auraLayer": 0,
       "extraAuraLayer": 2,
-      "extraAuraColor": "#37C6EE",
+      "extraAuraColor": "#0099FF",
       "extraAuraType": "god",
 
-      "hasLightnings": true,
-      "lightningColor": "#B8F0FF",
+      "hasLightnings": false,
+      "lightningColor": "",
 
       "tintColor": "#0044FF",
       "tintIntensity": 0.08,
@@ -166,16 +166,16 @@
       "unlockOnSkillLevel": 3,
 
       "hairType": "ssj",
-      "hairColor": "#2F8AE0",
-      "bodyColor2": "#2F8AE0",
+      "hairColor": "#003BFF",
+      "bodyColor2": "#003BFF",
       "eye1Color": "#00D2FF",
       "eye2Color": "#00D2FF",
 
       "auraType": "god",
-      "auraColor": "#5AA9FF",
+      "auraColor": "#001E85",
       "auraLayer": 0,
       "extraAuraLayer": 2,
-      "extraAuraColor": "#1E63C4",
+      "extraAuraColor": "#00A6FF",
       "extraAuraType": "god",
 
       "hasLightnings": true,
@@ -185,7 +185,7 @@
       "tintIntensity": 0.10,
 
       "outlineShader": {
-        "enabled": true,
+        "enabled": false,
         "primaryColor": "#123F80",
         "secondaryColor": "#1E63C4",
         "outlineThickness": 3.0

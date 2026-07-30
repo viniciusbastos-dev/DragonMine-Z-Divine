@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.dmzdivine.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "dmzdivine.refmap.json",
+  "mixins": [],
+  "client": [
+    "client.AuraRendererMixin",
+    "client.DMZHairLayerMixin",
+    "client.DMZPlayerRendererMixin",
+    "client.FormDataBodyColorMixin"
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
