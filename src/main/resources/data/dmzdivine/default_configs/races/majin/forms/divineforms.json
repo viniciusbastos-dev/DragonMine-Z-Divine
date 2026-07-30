@@ -18,8 +18,8 @@
 
       "auraType": "god",
       "auraColor": "#8B0000",
-      "auraLayer": 0,
-      "extraAuraLayer": 2,
+      "auraLayer": 2,
+      "extraAuraLayer": 3,
       "extraAuraColor": "#2E0854",
       "extraAuraType": "god",
 
@@ -93,8 +93,8 @@
 
       "auraType": "god",
       "auraColor": "#FF00FF",
-      "auraLayer": 0,
-      "extraAuraLayer": 2,
+      "auraLayer": 2,
+      "extraAuraLayer": 3,
       "extraAuraColor": "#4B0082",
       "extraAuraType": "god",
 

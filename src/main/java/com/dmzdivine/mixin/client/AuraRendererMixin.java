@@ -45,8 +45,8 @@ public abstract class AuraRendererMixin {
         float[] outerOverride = DivineAlignmentColors.auraOuterOverride(group, form, alignment);
         if (innerOverride != null || outerOverride != null) {
             for (AuraRenderer.AuraLayer layer : layers) {
-                if (layer.layerId == 0 && innerOverride != null) layer.color = innerOverride;
-                else if (layer.layerId == 2 && outerOverride != null) layer.color = outerOverride;
+                if (layer.layerId == 2 && innerOverride != null) layer.color = innerOverride;
+                else if (layer.layerId == 3 && outerOverride != null) layer.color = outerOverride;
             }
         }
 

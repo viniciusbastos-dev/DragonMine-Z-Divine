@@ -16,8 +16,8 @@
 
       "auraType": "god",
       "auraColor": "#FFCC00",
-      "auraLayer": 0,
-      "extraAuraLayer": 2,
+      "auraLayer": 2,
+      "extraAuraLayer": 3,
       "extraAuraColor": "#D6001C",
       "extraAuraType": "god",
 
@@ -99,8 +99,8 @@
 
       "auraType": "god",
       "auraColor": "#E2F9FF",
-      "auraLayer": 0,
-      "extraAuraLayer": 2,
+      "auraLayer": 2,
+      "extraAuraLayer": 3,
       "extraAuraColor": "#0099FF",
       "extraAuraType": "god",
 
@@ -173,8 +173,8 @@
 
       "auraType": "god",
       "auraColor": "#001E85",
-      "auraLayer": 0,
-      "extraAuraLayer": 2,
+      "auraLayer": 2,
+      "extraAuraLayer": 3,
       "extraAuraColor": "#00A6FF",
       "extraAuraType": "god",
 
