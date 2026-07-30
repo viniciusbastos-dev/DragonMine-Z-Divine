@@ -14,6 +14,7 @@ public class DivineConfig {
     public static final ForgeConfigSpec.ConfigValue<String> RITUAL_REQUIRED_SKILL;
     public static final ForgeConfigSpec.IntValue RITUAL_REQUIRED_SKILL_LEVEL;
     public static final ForgeConfigSpec.IntValue RITUAL_MIN_ALIGNMENT;
+    public static final ForgeConfigSpec.IntValue RITUAL_REQUIRED_TP;
 
     // --- God ritual minigame tuning (read client-side) ---
     public static final ForgeConfigSpec.DoubleValue MINIGAME_CURSOR_SPEED;
@@ -54,11 +55,15 @@ public class DivineConfig {
                         "Default 'superforms' is the Saiyan transformation skill.")
                 .define("requiredSkill", "superforms");
         RITUAL_REQUIRED_SKILL_LEVEL = BUILDER
-                .comment("Minimum level of requiredSkill. With the default Saiyan configs level 6 = Super Saiyan 3.")
-                .defineInRange("requiredSkillLevel", 6, 0, 50);
+                .comment("Minimum level of requiredSkill. With the default Saiyan configs level 8 = Super Saiyan 4,",
+                        "matching the God form's own formRequisite (100% SSJ4 mastery).")
+                .defineInRange("requiredSkillLevel", 8, 0, 50);
         RITUAL_MIN_ALIGNMENT = BUILDER
                 .comment("Minimum alignment (0-100). The god ritual demands a righteous heart, like the base mod's Ultimate ritual (>61).")
                 .defineInRange("minAlignment", 62, 0, 100);
+        RITUAL_REQUIRED_TP = BUILDER
+                .comment("Training Points the player must have to attempt the ritual. Spent on success, kept on failure.")
+                .defineInRange("requiredTp", 500000, 0, Integer.MAX_VALUE);
 
         BUILDER.pop();
         BUILDER.comment("Super Saiyan God ritual - minigame tuning").push("god_minigame");

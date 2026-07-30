@@ -14,7 +14,11 @@
   "message.dmzdivine.ritual.wrong_race": "Seu corpo não é capaz de canalizar o ki divino.",
   "message.dmzdivine.ritual.form_level": "Você ainda não é forte o suficiente para o ritual (requer %s nível %s).",
   "message.dmzdivine.ritual.alignment": "O ki divino exige um coração justo.",
+  "message.dmzdivine.ritual.tp": "Você precisa de %s Pontos de Treino para tentar o ritual.",
   "message.dmzdivine.ritual.failed": "O ritual falhou. Concentre sua mente e tente novamente.",
   "message.dmzdivine.ritual.misconfigured": "O ritual não pode ser realizado: falta a configuração da forma divina no servidor. Peça a um admin para checar o log.",
-  "message.dmzdivine.ritual.success": "O ki de cinco Saiyajins justos flui para você... Super Saiyajin Deus desbloqueado!"
+  "message.dmzdivine.ritual.success": "O ki de cinco Saiyajins justos flui para você... Super Saiyajin Deus desbloqueado!",
+
+  "entity.dmzdivine.master_goku": "Goku",
+  "item.dmzdivine.master_goku_spawn_egg": "Ovo de Invocação do Goku"
 }

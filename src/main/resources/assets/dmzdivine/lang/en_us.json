@@ -14,7 +14,11 @@
   "message.dmzdivine.ritual.wrong_race": "Your body cannot channel divine ki.",
   "message.dmzdivine.ritual.form_level": "You are not strong enough yet for the ritual (requires %s level %s).",
   "message.dmzdivine.ritual.alignment": "The divine ki demands a righteous heart.",
+  "message.dmzdivine.ritual.tp": "You need %s Training Points to attempt the ritual.",
   "message.dmzdivine.ritual.failed": "The ritual failed. Focus your mind and try again.",
   "message.dmzdivine.ritual.misconfigured": "The ritual cannot be performed: the server is missing the god form configuration. Ask an admin to check the server log.",
-  "message.dmzdivine.ritual.success": "The ki of five righteous Saiyans flows into you... Super Saiyan God unlocked!"
+  "message.dmzdivine.ritual.success": "The ki of five righteous Saiyans flows into you... Super Saiyan God unlocked!",
+
+  "entity.dmzdivine.master_goku": "Goku",
+  "item.dmzdivine.master_goku_spawn_egg": "Goku Spawn Egg"
 }

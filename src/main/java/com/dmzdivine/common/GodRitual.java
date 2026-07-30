@@ -82,6 +82,7 @@ public final class GodRitual {
             data.getSkills().registerDefaultSkill(GODFORMS_SKILL, maxLevel);
             data.getSkills().setSkillLevel(GODFORMS_SKILL, 1);
             data.updateTransformationSkillLimits(race);
+            data.getResources().removeTrainingPoints(DivineConfig.RITUAL_REQUIRED_TP.get());
 
             if (data.getSkills().getSkillLevel(GODFORMS_SKILL) < 1) {
                 DMZDivine.LOGGER.error("Failed to grant godforms to {}: level stayed 0 (godforms maxLevel={})",
@@ -131,6 +132,11 @@ public final class GodRitual {
 
         if (data.getResources().getAlignment() < DivineConfig.RITUAL_MIN_ALIGNMENT.get()) {
             return Component.translatable("message.dmzdivine.ritual.alignment");
+        }
+
+        int requiredTp = DivineConfig.RITUAL_REQUIRED_TP.get();
+        if (data.getResources().getTrainingPoints() < requiredTp) {
+            return Component.translatable("message.dmzdivine.ritual.tp", requiredTp);
         }
 
         return null;

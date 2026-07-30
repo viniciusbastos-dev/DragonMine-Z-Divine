@@ -63,7 +63,7 @@
 
       "formRequisite": "supersaiyan.supersaiyan4",
       "formRequisiteType": "all",
-      "unlockOnMastery": 50.0,
+      "unlockOnMastery": 100.0,
 
       "instantTransformOnMastery": 40.0,
       "allowFreeTransformOnMastery": 50.0,
@@ -146,7 +146,7 @@
 
       "formRequisite": "divineforms.supersaiyangod",
       "formRequisiteType": "all",
-      "unlockOnMastery": 50.0,
+      "unlockOnMastery": 100.0,
 
       "instantTransformOnMastery": 40.0,
       "allowFreeTransformOnMastery": 50.0,
