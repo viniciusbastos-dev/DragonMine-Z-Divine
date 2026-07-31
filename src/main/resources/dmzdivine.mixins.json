@@ -9,6 +9,7 @@
     "client.AuraRendererMixin",
     "client.DMZHairLayerMixin",
     "client.DMZPlayerRendererMixin",
+    "client.FlyHoverDecayMixin",
     "client.FormDataBodyColorMixin"
   ],
   "server": [],
