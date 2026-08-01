@@ -115,7 +115,7 @@
 
       "transformationAnimation": "transf.generic",
       "customModel": "buffed",
-      "keepBaseFormHeadBones": false,
+      "keepBaseFormHeadBones": true,
       "modelScaling": [1.0, 1.0, 1.0],
 
       "strMultiplier": 10.5,

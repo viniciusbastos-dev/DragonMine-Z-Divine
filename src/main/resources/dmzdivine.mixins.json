@@ -16,6 +16,7 @@
     "client.DMZPlayerRendererMixin",
     "client.FlyHoverDecayMixin",
     "client.FormDataBodyColorMixin",
+    "client.FormDataCustomModelMixin",
     "client.MinigamesScreenMixin"
   ],
   "server": [],

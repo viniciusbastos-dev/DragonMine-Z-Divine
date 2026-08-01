@@ -67,6 +67,7 @@ public class DivineConfig {
     public static final ForgeConfigSpec.IntValue AURA_COLOR_TRANSITION_TICKS;
     public static final ForgeConfigSpec.BooleanValue ALIGNMENT_RECOLOR;
     public static final ForgeConfigSpec.IntValue ALIGNMENT_EVIL_THRESHOLD;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> UI_MASTERED_BODY_PER_RACE;
 
     static {
         BUILDER.comment("Divine content shipped by this addon").push("content");
@@ -176,8 +177,9 @@ public class DivineConfig {
                         "The base mod ships the destination permanently locked (it was reserved for another addon);",
                         "this addon rewrites it, so this value is the only gate.",
                         "Calibrated against the base mod's own late game: the Buu saga asks for level ~2060 to",
-                        "reach the Sacred World, so the divine planet sits just past the end of that saga.")
-                .defineInRange("unlockLevel", 2500, 1, Integer.MAX_VALUE);
+                        "reach the Sacred World, so the divine planet sits inside the back half of that saga",
+                        "rather than after it.")
+                .defineInRange("unlockLevel", 1500, 1, Integer.MAX_VALUE);
         PLANET_GRAVITY = BUILDER
                 .comment("Ambient gravity of the whole planet, written into DragonMineZ's",
                         "general-server.json gravityPerWorld map on first launch (never overwritten afterwards -",
@@ -284,6 +286,28 @@ public class DivineConfig {
                 .comment("Alignment (0-100) at or below which the Rose recolor applies.",
                         "Matches the base mod's own good/neutral/evil banding (AlignmentBand: evil <= 40).")
                 .defineInRange("alignmentEvilThreshold", 40, 0, 100);
+        UI_MASTERED_BODY_PER_RACE = BUILDER
+                .comment("Body model used by Ultra Instinct Mastered, per race, as \"race=model\" entries.",
+                        "Ultra Instinct is one shared stack form for every race, so its JSON can only name one",
+                        "customModel - and \"buffed\" is the human/saiyan build, which is why a Namekian or a",
+                        "Frost Demon in Mastered turns into a human body. These override it per race with the",
+                        "base mod's own model keys, so its textures keep working.",
+                        "Valid keys are the ones DMZPlayerModel.resolveCustomModel knows, among them:",
+                        "  human, saiyan, buffed, ssj4d, 4arms, oozaru,",
+                        "  majin, majin_super, majin_ultra, majin_evil, majin_kid,",
+                        "  namekian, namekian_buffed, namekian_orange,",
+                        "  frostdemon, frostdemon_second, frostdemon_third, frostdemon_fifth, frostdemon_fp,",
+                        "  bioandroid, bioandroid_semi, bioandroid_perfect, bioandroid_ultra, bioandroid_xeno,",
+                        "  finalbase (the race's own natural body, whichever race that is).",
+                        "A race with no entry here keeps whatever forms/ultrainstinct.json asks for.")
+                .defineListAllowEmpty("ultraInstinctMasteredBodyPerRace", List.of(
+                        "human=buffed",
+                        "saiyan=buffed",
+                        "majin=majin_ultra",
+                        "namekian=namekian_buffed",
+                        "frostdemon=frostdemon_fp",
+                        "bioandroid=bioandroid_ultra"
+                ), o -> o instanceof String);
 
         BUILDER.pop();
     }
