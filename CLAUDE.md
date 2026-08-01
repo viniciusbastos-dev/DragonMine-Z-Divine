@@ -77,3 +77,43 @@ don't add them as Gradle subprojects, don't copy files wholesale.
   JSON under `default_configs/` and listing it in `SHIPPED_GROUPS` — never by mutating `ConfigManager`'s maps
   directly, since clients read `SERVER_SYNCED_FORMS` (files the server walks off disk) while connected.
   Existing files and existing prices are never overwritten; players still own whatever they have edited.
+
+## Beerus' planet (`dmzdivine:beerus_planet`)
+
+A divine-tier hub reached with the base mod's space pod: 10g everywhere, a 30g training arena, Beerus
+(Super Saiyan God ritual) and Whis (Ultra Instinct trial) standing in it.
+
+- **Worldgen is plain datapack JSON** under `resources/data/dmzdivine/` (`dimension_type/`, `dimension/`,
+  `worldgen/biome/`, `worldgen/noise_settings/`) — rolling plains on a slab floating over the void, fixed
+  night sky. No Java worldgen, no datagen.
+- **The layout is built in code**, not from structure NBT: `BeerusPlanetBuilder` flattens the hub and the
+  arena the first time a player arrives, because those coordinates must line up exactly with the pod's
+  landing spot and the gravity zone in `BeerusPlanet` — anything defined twice would drift.
+- **Travel needs a mixin.** The base mod's `spacepod/destinations.json` already has a `beerus` entry
+  (`dmzsuper:beerus_planet`, `unlock_rules: "NEVER"`) and sets `replace: true`, and its resource key sorts
+  after anything we can ship, so a datapack file of ours gets wiped.
+  `SpacePodDestinationRegistryMixin` rewrites that one entry after the reload listener finishes.
+- **Arena gravity needs a mixin too** (`GravityLogicMixin` on `computeGravity`): base gravity is per
+  dimension / gravity device / WorldGuard region, and the hub has to stay walkable, so there is no
+  event-shaped hook for "this cylinder of this world".
+- **The arena's TP bonus answers inside `StatsData.getTpHTCMultiplier`** (`StatsDataTpMixin`), not in
+  `DMZEvent.TPGainEvent`. The event version awarded the right TP but was invisible: the character screen
+  builds its multiplier breakdown from the base mod's getters, and `gameplay.tpGainBoosts` decides per TP
+  source whether a bonus counts at all — an event listener sits outside both.
+- **Ultra Instinct is Whis-only and God is Beerus-only.** No master sells them: `ultrainstinct` is priced
+  `[-1, -1]` in `skills.json` (the installer migrates worlds that still have the old King Kai prices), and
+  the Goku NPC only points at Beerus now. Whis also hands out King Kai's `workout_weights` through
+  `WhisServices` — the base `NPCActionC2S` route can't be reused because it validates that an NPC with
+  *that name* is within 8 blocks.
+- **The planet has its own ground blocks** (`dmzdivine:beerus_{grass_block,dirt,stone}`, `DivineBlocks`),
+  placed both by the surface rule and by the builder. The shipped textures are flat placeholders meant to
+  be overwritten in `assets/dmzdivine/textures/block/`.
+- **Beerus and Whis are spawned exactly once**, guarded by a flag in `BeerusPlanetData` — never by scanning
+  for them, because an arriving player's chunks are still loading and the search comes back empty (that bug
+  stacked a new pair on every visit). `/dmzdivine beerus respawnmasters` cleans duplicates,
+  `/dmzdivine beerus rebuild` re-lays the layout after a block/layout change.
+- **Ambient planet gravity is config, not code**: `DivineFormsInstaller` adds the dimension to
+  DragonMineZ's `gravity.gravityPerWorld` in `general-server.json`, same never-overwrite rule as the forms.
+- **Whis' trial state** (arena training minutes per player) lives in `BeerusPlanetData`, a `SavedData` in
+  the planet's own dimension folder.
+- **Beerus/Whis assets are GPL-3.0 third-party files** — see `THIRD_PARTY.md` before publishing a jar.

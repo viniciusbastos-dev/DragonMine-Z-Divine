@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "dmzdivine:block/beerus_grass_block_top",
+    "side": "dmzdivine:block/beerus_grass_block_side",
+    "bottom": "dmzdivine:block/beerus_dirt"
+  }
+}

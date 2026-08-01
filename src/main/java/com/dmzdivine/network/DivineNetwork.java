@@ -2,7 +2,11 @@ package com.dmzdivine.network;
 
 import com.dmzdivine.DMZDivine;
 import com.dmzdivine.network.C2S.GodRitualResultC2S;
+import com.dmzdivine.network.C2S.UltraInstinctTrialResultC2S;
+import com.dmzdivine.network.C2S.WhisActionC2S;
 import com.dmzdivine.network.S2C.OpenGodRitualS2C;
+import com.dmzdivine.network.S2C.OpenUltraInstinctTrialS2C;
+import com.dmzdivine.network.S2C.OpenWhisDialogueS2C;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
@@ -32,6 +36,26 @@ public class DivineNetwork {
                 .encoder(GodRitualResultC2S::encode)
                 .decoder(GodRitualResultC2S::new)
                 .consumerMainThread(GodRitualResultC2S::handle)
+                .add();
+        CHANNEL.messageBuilder(OpenUltraInstinctTrialS2C.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(OpenUltraInstinctTrialS2C::encode)
+                .decoder(OpenUltraInstinctTrialS2C::new)
+                .consumerMainThread(OpenUltraInstinctTrialS2C::handle)
+                .add();
+        CHANNEL.messageBuilder(UltraInstinctTrialResultC2S.class, id++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(UltraInstinctTrialResultC2S::encode)
+                .decoder(UltraInstinctTrialResultC2S::new)
+                .consumerMainThread(UltraInstinctTrialResultC2S::handle)
+                .add();
+        CHANNEL.messageBuilder(OpenWhisDialogueS2C.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(OpenWhisDialogueS2C::encode)
+                .decoder(OpenWhisDialogueS2C::new)
+                .consumerMainThread(OpenWhisDialogueS2C::handle)
+                .add();
+        CHANNEL.messageBuilder(WhisActionC2S.class, id++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(WhisActionC2S::encode)
+                .decoder(WhisActionC2S::new)
+                .consumerMainThread(WhisActionC2S::handle)
                 .add();
     }
 

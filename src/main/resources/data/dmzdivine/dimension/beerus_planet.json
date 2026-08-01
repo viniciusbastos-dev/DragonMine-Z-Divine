@@ -1,0 +1,11 @@
+{
+  "type": "dmzdivine:beerus_planet",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "dmzdivine:beerus_plains"
+    },
+    "settings": "dmzdivine:beerus_planet"
+  }
+}

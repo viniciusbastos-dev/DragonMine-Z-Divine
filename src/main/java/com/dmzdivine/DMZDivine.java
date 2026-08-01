@@ -1,6 +1,7 @@
 package com.dmzdivine;
 
 import com.dmzdivine.common.DivineFormsInstaller;
+import com.dmzdivine.common.init.DivineBlocks;
 import com.dmzdivine.common.init.DivineEntities;
 import com.dmzdivine.network.DivineNetwork;
 import com.mojang.logging.LogUtils;
@@ -19,6 +20,7 @@ public class DMZDivine {
     public DMZDivine(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
         modEventBus.addListener(this::commonSetup);
+        DivineBlocks.register(modEventBus);
         DivineEntities.register(modEventBus);
 
         context.registerConfig(ModConfig.Type.COMMON, DivineConfig.SPEC);

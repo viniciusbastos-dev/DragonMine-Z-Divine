@@ -2,6 +2,7 @@ package com.dmzdivine.common;
 
 import com.dmzdivine.DMZDivine;
 import com.dmzdivine.DivineConfig;
+import com.dmzdivine.common.world.BeerusPlanet;
 import com.dragonminez.common.config.ConfigManager;
 import com.dragonminez.common.config.RaceCharacterConfig;
 import com.google.gson.JsonArray;
@@ -46,8 +47,13 @@ public final class DivineFormsInstaller {
     private static final List<Integer> SAIYAN_GOD_PRICE_ADDITIONS = List.of(-1, 200000, 300000);
     private static final int SAIYAN_SUPERFORMS_BASELINE = 8;
 
-    /** Level 1 unlocks "sign", level 2 unlocks "mastered" - see forms/ultrainstinct.json. */
-    private static final List<Integer> ULTRAINSTINCT_TP_COSTS = List.of(500000, 1000000);
+    /** Level 1 unlocks "sign", level 2 unlocks "mastered" - see forms/ultrainstinct.json.
+     * Both are -1: the skill exists with two levels, but no shop can sell it and no TP can upgrade it.
+     * Whis' trial is the only way in (UltraInstinctTraining), same trick the base mod uses for "ultimate". */
+    private static final List<Integer> ULTRAINSTINCT_TP_COSTS = List.of(-1, -1);
+
+    /** What this addon used to ship, back when King Kai sold it. Only these get migrated to -1. */
+    private static final List<Integer> LEGACY_ULTRAINSTINCT_TP_COSTS = List.of(500000, 1000000);
 
     /** Form groups installed as their own standalone file: race -> config file name (without .json) -> prices. */
     private static final List<FormGroup> SHIPPED_GROUPS = List.of(
@@ -81,6 +87,49 @@ public final class DivineFormsInstaller {
 
         installSaiyanGodforms();
         installUltraInstinct();
+        installBeerusPlanetGravity();
+    }
+
+    // --- Beerus' planet: ambient gravity, declared where the base mod expects to find it ---
+
+    /**
+     * Registers the planet in DragonMineZ's own {@code gravity.gravityPerWorld} map, so every
+     * consumer of {@code GravityLogic} treats it like any other heavy world (Namek, the Time
+     * Chamber). Only added when the key is absent - once it is in the file, the server owns it.
+     */
+    private static void installBeerusPlanetGravity() {
+        String relativePath = "general-server";
+        String dimensionKey = BeerusPlanet.DIMENSION_ID.toString();
+
+        try {
+            String json = ConfigManager.getSpecificConfigJson(relativePath);
+            if (json == null) {
+                DMZDivine.LOGGER.error("Could not read {}.json to register Beerus' planet gravity", relativePath);
+                return;
+            }
+
+            JsonObject root = JsonParser.parseString(json).getAsJsonObject();
+            JsonObject gravity = root.getAsJsonObject("gravity");
+            if (gravity == null) {
+                gravity = new JsonObject();
+                root.add("gravity", gravity);
+            }
+            JsonObject perWorld = gravity.getAsJsonObject("gravityPerWorld");
+            if (perWorld == null) {
+                perWorld = new JsonObject();
+                gravity.add("gravityPerWorld", perWorld);
+            }
+            if (perWorld.has(dimensionKey)) return;
+
+            perWorld.addProperty(dimensionKey, DivineConfig.PLANET_GRAVITY.get());
+            if (ConfigManager.saveRawConfig(relativePath, root.toString())) {
+                ConfigManager.reloadSpecificConfig(relativePath);
+                DMZDivine.LOGGER.info("Registered {} at {}g in general-server.json",
+                        dimensionKey, DivineConfig.PLANET_GRAVITY.get());
+            }
+        } catch (Exception e) {
+            DMZDivine.LOGGER.error("Could not register Beerus' planet gravity: {}", e.toString());
+        }
     }
 
     // --- Saiyan God/Blue/Blue Evolved: its own group sharing the "superforms" skill/ladder instead
@@ -170,9 +219,17 @@ public final class DivineFormsInstaller {
         wireUltraInstinctSkill();
     }
 
-    /** Marks "ultrainstinct" as a stack skill (layers on the active form instead of replacing it,
-     * same as kaioken/ultimate), gives it a TP cost open to every race, and lists King Kai as a
-     * seller - all in the global skills.json, never overwriting anything already there. */
+    /**
+     * Marks "ultrainstinct" as a stack skill (layers on the active form instead of replacing it, same
+     * as kaioken/ultimate) and keeps it out of every skill shop: Ultra Instinct is Whis' to give now,
+     * so both of its levels are priced {@code -1}, which blocks the purchase and the upgrade paths in
+     * {@code UpdateSkillC2S} while still letting the skill exist with two levels (the max level comes
+     * from how many prices are listed, not from their value - same trick as the base mod's "ultimate").
+     *
+     * <p>This is the one place the installer deliberately edits values it wrote before: worlds created
+     * while Ultra Instinct was buyable from King Kai are migrated, but only when the prices are still
+     * exactly the ones this addon shipped - a hand-tuned price list is left alone.
+     */
     private static void wireUltraInstinctSkill() {
         try {
             String json = ConfigManager.getSpecificConfigJson("skills");
@@ -200,33 +257,32 @@ public final class DivineFormsInstaller {
                 root.add("skills", skills);
             }
             if (!skills.has("ultrainstinct")) {
-                JsonArray costs = new JsonArray();
-                ULTRAINSTINCT_TP_COSTS.forEach(costs::add);
                 JsonObject entry = new JsonObject();
-                entry.add("costs", costs);
+                entry.add("costs", tpCostArray(ULTRAINSTINCT_TP_COSTS));
                 entry.add("allowedRaces", new JsonArray()); // empty = every race, same as kaioken/ultimate
                 skills.add("ultrainstinct", entry);
                 changed = true;
+            } else if (hasPrices(skills.getAsJsonObject("ultrainstinct"), LEGACY_ULTRAINSTINCT_TP_COSTS)) {
+                skills.getAsJsonObject("ultrainstinct").add("costs", tpCostArray(ULTRAINSTINCT_TP_COSTS));
+                changed = true;
+                DMZDivine.LOGGER.info("Ultra Instinct is Whis-only now: its old King Kai prices were replaced with -1");
             }
 
+            // Whis-only means no shop sells it, on any master.
             JsonObject offerings = root.getAsJsonObject("skillOfferings");
-            if (offerings == null) {
-                offerings = new JsonObject();
-                root.add("skillOfferings", offerings);
-            }
-            JsonArray kingkai = offerings.getAsJsonArray("kingkai");
-            if (kingkai == null) {
-                kingkai = new JsonArray();
-                offerings.add("kingkai", kingkai);
-            }
-            if (!containsIgnoreCase(kingkai, "ultrainstinct")) {
-                kingkai.add("ultrainstinct");
-                changed = true;
+            if (offerings != null) {
+                for (String master : offerings.keySet()) {
+                    JsonArray sold = offerings.getAsJsonArray(master);
+                    if (sold != null && removeIgnoreCase(sold, "ultrainstinct")) {
+                        changed = true;
+                        DMZDivine.LOGGER.info("Removed Ultra Instinct from {}'s skill offerings", master);
+                    }
+                }
             }
 
             if (changed && ConfigManager.saveRawConfig("skills", root.toString())) {
                 ConfigManager.reloadSpecificConfig("skills");
-                DMZDivine.LOGGER.info("Wired Ultra Instinct into skills.json (stackSkills/costs/offerings)");
+                DMZDivine.LOGGER.info("Wired Ultra Instinct into skills.json (stack skill, no shop)");
             }
         } catch (Exception e) {
             DMZDivine.LOGGER.error("Could not wire Ultra Instinct into skills.json: {}", e.toString());
@@ -238,6 +294,35 @@ public final class DivineFormsInstaller {
             if (element.isJsonPrimitive() && value.equalsIgnoreCase(element.getAsString())) return true;
         }
         return false;
+    }
+
+    private static boolean removeIgnoreCase(JsonArray array, String value) {
+        for (int i = 0; i < array.size(); i++) {
+            JsonElement element = array.get(i);
+            if (element.isJsonPrimitive() && value.equalsIgnoreCase(element.getAsString())) {
+                array.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static JsonArray tpCostArray(List<Integer> costs) {
+        JsonArray array = new JsonArray();
+        costs.forEach(array::add);
+        return array;
+    }
+
+    /** True when a skill entry's price list is exactly {@code expected} - i.e. still untouched by hand. */
+    private static boolean hasPrices(JsonObject skillEntry, List<Integer> expected) {
+        if (skillEntry == null) return false;
+        JsonArray costs = skillEntry.getAsJsonArray("costs");
+        if (costs == null || costs.size() != expected.size()) return false;
+        for (int i = 0; i < expected.size(); i++) {
+            JsonElement element = costs.get(i);
+            if (!element.isJsonPrimitive() || element.getAsInt() != expected.get(i)) return false;
+        }
+        return true;
     }
 
     // --- Majin Demon God: standalone group + its own "godforms" skill, unchanged from before ---

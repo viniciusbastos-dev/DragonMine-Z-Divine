@@ -4,7 +4,11 @@
   "package": "com.dmzdivine.mixin",
   "compatibilityLevel": "JAVA_17",
   "refmap": "dmzdivine.refmap.json",
-  "mixins": [],
+  "mixins": [
+    "GravityLogicMixin",
+    "SpacePodDestinationRegistryMixin",
+    "StatsDataTpMixin"
+  ],
   "client": [
     "client.AuraRendererMixin",
     "client.DMZHairLayerMixin",

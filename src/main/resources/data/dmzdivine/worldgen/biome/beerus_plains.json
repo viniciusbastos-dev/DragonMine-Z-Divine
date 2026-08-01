@@ -1,0 +1,42 @@
+{
+  "_comment": "Violet sky and pale grass, no weather and no spawners: the planet is a training ground, not a survival world. features[] is the vanilla list-of-lists (one entry per GenerationStep), only step 9 (VEGETAL_DECORATION) carries anything.",
+  "has_precipitation": false,
+  "temperature": 0.6,
+  "downfall": 0.0,
+  "effects": {
+    "sky_color": 3021391,
+    "fog_color": 5914252,
+    "water_color": 8085447,
+    "water_fog_color": 2760010,
+    "grass_color": 9420651,
+    "foliage_color": 7645276
+  },
+  "carvers": {},
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:patch_grass_plain",
+      "minecraft:flower_plain"
+    ],
+    []
+  ],
+  "spawners": {
+    "monster": [],
+    "creature": [],
+    "ambient": [],
+    "axolotls": [],
+    "underground_water_creature": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  },
+  "spawn_costs": {}
+}

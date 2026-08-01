@@ -18,5 +18,7 @@ public final class DivineEntityRenderers {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(DivineEntities.GOD_MASTER.get(), MasterEntityRenderer::new);
+        event.registerEntityRenderer(DivineEntities.BEERUS_MASTER.get(), MasterEntityRenderer::new);
+        event.registerEntityRenderer(DivineEntities.WHIS_MASTER.get(), MasterEntityRenderer::new);
     }
 }
