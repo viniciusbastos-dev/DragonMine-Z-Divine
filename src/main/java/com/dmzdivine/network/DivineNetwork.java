@@ -2,8 +2,10 @@ package com.dmzdivine.network;
 
 import com.dmzdivine.DMZDivine;
 import com.dmzdivine.network.C2S.GodRitualResultC2S;
+import com.dmzdivine.network.C2S.MeditationActionC2S;
 import com.dmzdivine.network.C2S.UltraInstinctTrialResultC2S;
 import com.dmzdivine.network.C2S.WhisActionC2S;
+import com.dmzdivine.network.S2C.MeditationStateS2C;
 import com.dmzdivine.network.S2C.OpenGodRitualS2C;
 import com.dmzdivine.network.S2C.OpenUltraInstinctTrialS2C;
 import com.dmzdivine.network.S2C.OpenWhisDialogueS2C;
@@ -56,6 +58,16 @@ public class DivineNetwork {
                 .encoder(WhisActionC2S::encode)
                 .decoder(WhisActionC2S::new)
                 .consumerMainThread(WhisActionC2S::handle)
+                .add();
+        CHANNEL.messageBuilder(MeditationActionC2S.class, id++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(MeditationActionC2S::encode)
+                .decoder(MeditationActionC2S::new)
+                .consumerMainThread(MeditationActionC2S::handle)
+                .add();
+        CHANNEL.messageBuilder(MeditationStateS2C.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(MeditationStateS2C::encode)
+                .decoder(MeditationStateS2C::new)
+                .consumerMainThread(MeditationStateS2C::handle)
                 .add();
     }
 

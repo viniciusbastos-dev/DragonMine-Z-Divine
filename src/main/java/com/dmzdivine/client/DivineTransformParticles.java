@@ -92,9 +92,18 @@ public final class DivineTransformParticles {
         return character.hasActiveForm() && isGodGroup(character.getRaceName(), character.getActiveFormGroup());
     }
 
-    /** Matches on formType rather than the group name, so renaming the group in JSON keeps working. */
+    /** The group this addon ships its divine forms under, for both Saiyan and Majin. */
+    private static final String DIVINE_GROUP = "divineforms";
+
+    /**
+     * A formType containing "god" catches Majin's Demon God and any other god-typed group, ours or
+     * not. Our own group has to be named explicitly on top of that: the Saiyan God/Blue/Blue Evolved
+     * chain is deliberately formType "superforms" so it renders inside the normal Super Saiyan menu
+     * instead of the "Extra Forms" node, and matching on formType alone silently dropped it.
+     */
     private static boolean isGodGroup(String race, String group) {
         if (group == null || group.isEmpty()) return false;
+        if (DIVINE_GROUP.equalsIgnoreCase(group)) return true;
         FormConfig config = ConfigManager.getFormGroup(race, group);
         if (config == null || config.getFormType() == null) return false;
         return config.getFormType().toLowerCase(Locale.ROOT).contains("god");

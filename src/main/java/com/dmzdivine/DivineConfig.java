@@ -52,6 +52,13 @@ public class DivineConfig {
     public static final ForgeConfigSpec.DoubleValue WHIS_TRIAL_WINDUP_DECREASE;
     public static final ForgeConfigSpec.IntValue WHIS_TRIAL_REACT_WINDOW;
 
+    // --- Meditation training: passive TP inside the arena, in Ultra Instinct ---
+    public static final ForgeConfigSpec.BooleanValue MEDITATION_ENABLED;
+    public static final ForgeConfigSpec.DoubleValue MEDITATION_STAT_COST_FRACTION;
+    public static final ForgeConfigSpec.IntValue MEDITATION_FALLBACK_TP;
+    public static final ForgeConfigSpec.ConfigValue<String> MEDITATION_RESOURCE;
+    public static final ForgeConfigSpec.DoubleValue MEDITATION_RESOURCE_PERCENT;
+
     // --- Divine transformation visuals (client-side) ---
     public static final ForgeConfigSpec.BooleanValue TRANSFORM_PARTICLES;
     public static final ForgeConfigSpec.ConfigValue<String> TRANSFORM_PARTICLE_COLOR;
@@ -218,6 +225,34 @@ public class DivineConfig {
                 .comment("Ticks before impact during which a dodge counts. Reacting earlier than this is reading",
                         "the attack instead of feeling it, and misses.")
                 .defineInRange("trialReactWindow", 10, 1, 100);
+
+        BUILDER.pop();
+        BUILDER.comment("Meditation training - the passive TP trickle inside Whis' arena").push("meditation");
+
+        MEDITATION_ENABLED = BUILDER
+                .comment("Allow meditating inside Whis' arena while transformed into Ultra Instinct, which",
+                        "earns Training Points every second for as long as the player stays still.")
+                .define("enabled", true);
+        MEDITATION_STAT_COST_FRACTION = BUILDER
+                .comment("TP earned per second, as a fraction of what one stat point currently costs this",
+                        "player. Scaled instead of flat for the same reason the base mod scales its training",
+                        "minigames: a fixed number is enormous at the start and pointless later.",
+                        "This is the amount BEFORE the arena multiplier, which lands on top like it does on",
+                        "any other TP source. At 0.01 that works out to one stat point roughly every 33",
+                        "seconds inside the arena's 3x, or every 25 at 4x, at any stage of the game.")
+                .defineInRange("tpPerSecondStatCostFraction", 0.01, 0.0, 10.0);
+        MEDITATION_FALLBACK_TP = BUILDER
+                .comment("TP per second used when the stat cost cannot be read - servers running DragonMineZ's",
+                        "dynamic growth with manual TP purchases disabled have no meaningful stat price.")
+                .defineInRange("fallbackTpPerSecond", 250, 0, Integer.MAX_VALUE);
+        MEDITATION_RESOURCE = BUILDER
+                .comment("Resource drained while meditating: \"ki\" or \"stamina\". Meditation stops when it runs out.")
+                .define("resource", "ki");
+        MEDITATION_RESOURCE_PERCENT = BUILDER
+                .comment("Percent of that resource's maximum drained per second. This is the brake on AFK",
+                        "farming, so it has to stay above the player's passive regeneration of that resource -",
+                        "below it the pool simply refills itself and meditation never ends. 0 removes the cost.")
+                .defineInRange("resourcePercentPerSecond", 1.0, 0.0, 100.0);
 
         BUILDER.pop();
         BUILDER.comment("Divine transformation visuals (read on the client)").push("divine_visuals");

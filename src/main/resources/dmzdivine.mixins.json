@@ -7,14 +7,16 @@
   "mixins": [
     "GravityLogicMixin",
     "SpacePodDestinationRegistryMixin",
-    "StatsDataTpMixin"
+    "StatsDataTpMixin",
+    "TrainingConfigMixin"
   ],
   "client": [
     "client.AuraRendererMixin",
     "client.DMZHairLayerMixin",
     "client.DMZPlayerRendererMixin",
     "client.FlyHoverDecayMixin",
-    "client.FormDataBodyColorMixin"
+    "client.FormDataBodyColorMixin",
+    "client.MinigamesScreenMixin"
   ],
   "server": [],
   "injectors": {
