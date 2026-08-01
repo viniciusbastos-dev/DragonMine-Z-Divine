@@ -6,6 +6,8 @@ import com.dmzdivine.common.UltraInstinctTraining;
 import com.dmzdivine.common.world.BeerusPlanet;
 import com.dmzdivine.common.world.BeerusPlanetBuilder;
 import com.dmzdivine.common.world.BeerusPlanetData;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
@@ -21,6 +23,7 @@ import net.minecraftforge.fml.common.Mod;
  * /dmzdivine godritual [player]  - attempt the Super Saiyan God ritual (Beerus and Goku also start it)
  * /dmzdivine beerus travel          - (ops) land on the planet's pad without a space pod
  * /dmzdivine beerus training        - how much arena training is banked for Whis' trial
+ * /dmzdivine beerus training add &lt;minutes&gt; [player] - (ops) bank arena training without standing in it
  * /dmzdivine beerus respawnmasters  - (ops) clear duplicated Beerus/Whis and place one of each
  * </pre>
  */
@@ -50,7 +53,17 @@ public final class DivineCommands {
                                 .requires(source -> source.hasPermission(2))
                                 .executes(ctx -> travel(ctx.getSource().getPlayerOrException())))
                         .then(Commands.literal("training")
-                                .executes(ctx -> reportTraining(ctx.getSource().getPlayerOrException())))
+                                .executes(ctx -> reportTraining(ctx.getSource().getPlayerOrException()))
+                                .then(Commands.literal("add")
+                                        .requires(source -> source.hasPermission(2))
+                                        .then(Commands.argument("minutes", IntegerArgumentType.integer(1, 100000))
+                                                .executes(ctx -> addTraining(ctx.getSource(),
+                                                        ctx.getSource().getPlayerOrException(),
+                                                        IntegerArgumentType.getInteger(ctx, "minutes")))
+                                                .then(Commands.argument("player", EntityArgument.player())
+                                                        .executes(ctx -> addTraining(ctx.getSource(),
+                                                                EntityArgument.getPlayer(ctx, "player"),
+                                                                IntegerArgumentType.getInteger(ctx, "minutes")))))))
                         .then(Commands.literal("respawnmasters")
                                 .requires(source -> source.hasPermission(2))
                                 .executes(ctx -> respawnMasters(ctx.getSource().getPlayerOrException())))
@@ -106,6 +119,28 @@ public final class DivineCommands {
         ServerLevel planet = player.server.getLevel(BeerusPlanet.DIMENSION);
         int ticks = planet == null ? 0 : BeerusPlanetData.get(planet).getArenaTicks(player.getUUID());
         player.sendSystemMessage(Component.literal("Arena training: " + UltraInstinctTraining.minutes(ticks) + " min"));
+        return 1;
+    }
+
+    /**
+     * Banks arena training straight into {@link BeerusPlanetData}, the same place the arena ticker
+     * writes to - so it counts towards Whis' trial and is spent by it exactly like time actually
+     * trained. The planet has to exist: that saved data lives in its dimension folder.
+     */
+    private static int addTraining(CommandSourceStack source, ServerPlayer target, int minutes) {
+        ServerLevel planet = target.server.getLevel(BeerusPlanet.DIMENSION);
+        if (planet == null) {
+            source.sendFailure(Component.literal(
+                    "Beerus' planet is not loaded - is dmzdivine:beerus_planet present in the datapack?"));
+            return 0;
+        }
+
+        BeerusPlanetData data = BeerusPlanetData.get(planet);
+        data.addArenaTicks(target.getUUID(), UltraInstinctTraining.ticks(minutes));
+        int total = UltraInstinctTraining.minutes(data.getArenaTicks(target.getUUID()));
+
+        source.sendSuccess(() -> Component.literal("Added " + minutes + " min of arena training to "
+                + target.getGameProfile().getName() + " (now " + total + " min)"), true);
         return 1;
     }
 }

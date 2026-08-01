@@ -97,7 +97,20 @@ public class BeerusPlanetData extends SavedData {
 
     public void addArenaTicks(UUID player, int ticks) {
         if (ticks <= 0) return;
-        arenaTicks.merge(player, ticks, Integer::sum);
+        // Saturating: the command can hand out arbitrary amounts, and a wrapped total would read as
+        // "no training at all".
+        arenaTicks.merge(player, ticks, (a, b) -> (int) Math.min(Integer.MAX_VALUE, (long) a + b));
+        setDirty();
+    }
+
+    /**
+     * Takes banked training back out, which is what a passed trial costs: each Ultra Instinct level
+     * is paid for with its own stretch of arena time instead of a running total.
+     */
+    public void spendArenaTicks(UUID player, int ticks) {
+        if (ticks <= 0) return;
+        int left = Math.max(0, getArenaTicks(player) - ticks);
+        arenaTicks.put(player, left);
         setDirty();
     }
 }

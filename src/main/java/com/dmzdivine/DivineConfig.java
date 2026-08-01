@@ -31,6 +31,10 @@ public class DivineConfig {
     public static final ForgeConfigSpec.IntValue UI_VIT_REFERENCE;
     public static final ForgeConfigSpec.ConfigValue<String> UI_DODGE_RESOURCE;
     public static final ForgeConfigSpec.IntValue UI_DODGE_COST;
+    public static final ForgeConfigSpec.BooleanValue UI_BP_SCALING;
+    public static final ForgeConfigSpec.DoubleValue UI_BP_FREE_RATIO;
+    public static final ForgeConfigSpec.DoubleValue UI_BP_EXPONENT;
+    public static final ForgeConfigSpec.DoubleValue UI_BP_MIN_FACTOR;
 
     // --- Beerus' planet: travel, gravity and Whis' arena ---
     public static final ForgeConfigSpec.IntValue BEERUS_UNLOCK_LEVEL;
@@ -137,6 +141,26 @@ public class DivineConfig {
                         "the player has also built enough of the chosen resource pool to sustain it.")
                 .defineInRange("dodgeCost", 30, 0, Integer.MAX_VALUE);
 
+        UI_BP_SCALING = BUILDER
+                .comment("Weigh the attacker's Battle Power against the defender's. Someone far below you cannot",
+                        "touch you; an even fight leaves the mastery+VIT chance as it is; someone above you is",
+                        "fast enough that part of their attacks get through. Off = only mastery and VIT matter.")
+                .define("battlePowerScaling", true);
+        UI_BP_FREE_RATIO = BUILDER
+                .comment("Attacker BP / defender BP at or below which every attack is dodged. 0.5 means anyone",
+                        "with half your Battle Power or less never lands a hit; between this and 1.0 the chance",
+                        "eases back down to the plain mastery+VIT value.")
+                .defineInRange("bpFreeRatio", 0.50, 0.0, 0.99);
+        UI_BP_EXPONENT = BUILDER
+                .comment("How hard a Battle Power gap above yours cuts the dodge chance: it is multiplied by",
+                        "(yourBp / attackerBp) ^ this. 1.0 = twice your BP halves the chance, ten times cuts it",
+                        "to a tenth. Lower is gentler, higher makes stronger opponents much scarier.")
+                .defineInRange("bpFalloffExponent", 1.0, 0.0, 5.0);
+        UI_BP_MIN_FACTOR = BUILDER
+                .comment("The gap never cuts the chance below this share of it, no matter how far above you the",
+                        "attacker is - even a hopeless fight leaves a few dodges in. 0.0 removes the floor.")
+                .defineInRange("bpMinFactor", 0.10, 0.0, 1.0);
+
         BUILDER.pop();
         BUILDER.comment("Beerus' planet - space pod destination, gravity and Whis' training arena").push("beerus_planet");
 
@@ -166,14 +190,15 @@ public class DivineConfig {
         BUILDER.comment("Whis' Ultra Instinct trial - how much training he demands, and the trial itself").push("whis_trial");
 
         WHIS_TRAINING_MINUTES = BUILDER
-                .comment("Minutes of training inside the arena before Whis agrees to test you for Ultra Instinct",
-                        "Sign. Mastered asks for twice this in total. Time is banked per player, per world.",
+                .comment("Minutes of training inside the arena before Whis agrees to test you. The same for both",
+                        "trials, and spent when one is passed - so Mastered means training this much again from",
+                        "zero. Time is banked per player, per world.",
                         "This is the whole gate: Ultra Instinct cannot be bought from any master anymore.")
                 .defineInRange("trainingMinutes", 60, 0, 10000);
         WHIS_TRIAL_TP = BUILDER
-                .comment("Training Points spent when a trial is passed (doubled for the Mastered trial).",
+                .comment("Training Points spent when a trial is passed. The same for both trials.",
                         "Kept on failure.")
-                .defineInRange("trialTpCost", 250000, 0, Integer.MAX_VALUE);
+                .defineInRange("trialTpCost", 1000000, 0, Integer.MAX_VALUE);
         WHIS_TRIAL_DODGES = BUILDER
                 .comment("Successful dodges needed to pass a trial.")
                 .defineInRange("trialDodges", 8, 1, 50);

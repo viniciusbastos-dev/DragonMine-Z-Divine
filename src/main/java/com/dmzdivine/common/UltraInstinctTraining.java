@@ -136,6 +136,7 @@ public final class UltraInstinctTraining {
             }
 
             data.getResources().removeTrainingPoints(cost);
+            spendTraining(player, requiredTicks(nextLevel));
             NetworkHandler.sendToTrackingEntityAndSelf(new StatsSyncS2C(player), player);
 
             player.serverLevel().playSound(null, player.blockPosition(),
@@ -156,17 +157,32 @@ public final class UltraInstinctTraining {
         return BeerusPlanetData.get(planet).getArenaTicks(player.getUUID());
     }
 
-    /** Arena training needed for a given Ultra Instinct level - each level asks for that much again. */
-    public static int requiredTicks(int level) {
-        return DivineConfig.WHIS_TRAINING_MINUTES.get() * 60 * 20 * Math.max(1, level);
+    /** Burns the training a passed trial consumed. */
+    private static void spendTraining(ServerPlayer player, int ticks) {
+        ServerLevel planet = player.server.getLevel(BeerusPlanet.DIMENSION);
+        if (planet == null) return;
+        BeerusPlanetData.get(planet).spendArenaTicks(player.getUUID(), ticks);
     }
 
+    /**
+     * Arena training needed for a trial. The same for both levels - and spent on success, so
+     * Mastered means training that stretch over again rather than reaching a higher total.
+     */
+    public static int requiredTicks(int level) {
+        return DivineConfig.WHIS_TRAINING_MINUTES.get() * 60 * 20;
+    }
+
+    /** Same TP for both levels. */
     public static int tpCost(int level) {
-        return DivineConfig.WHIS_TRIAL_TP.get() * Math.max(1, level);
+        return DivineConfig.WHIS_TRIAL_TP.get();
     }
 
     public static int minutes(int ticks) {
         return ticks / (60 * 20);
+    }
+
+    public static int ticks(int minutes) {
+        return minutes * 60 * 20;
     }
 
     private static void say(ServerPlayer player, String key, ChatFormatting color) {
