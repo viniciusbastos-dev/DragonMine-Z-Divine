@@ -1,12 +1,12 @@
 {
-  "_comment": "Classe Divina - addon. formType godforms para que a skill seja comprada do Goku (buyFromMaster) sem afetar a linha superforms.",
+  "_comment": "formType 'superforms' (not 'godforms') so this shows up in the normal Super Saiyan menu instead of the 'Extra Forms' radial node, which is hardcoded to the 'godforms' formType in MoreFormsNode.java. It's still its own groupName/file though (like ssgrades.json is its own group next to supersaiyan.json in the base mod) so God renders as its own sibling branch off supersaiyan4, with Blue/Blue Evolved as its sub-chain - not squeezed in as a deeper level of the existing supersaiyan.json chain. Levels 9-11 of the shared 'superforms' skill (see DivineFormsInstaller.extendSuperformsPrices); level 9 is -1 in character.json, ritual-only.",
   "configVersion": "2.1.3",
   "groupName": "divineforms",
-  "formType": "godforms",
+  "formType": "superforms",
   "forms": {
     "supersaiyangod": {
       "name": "supersaiyangod",
-      "unlockOnSkillLevel": 1,
+      "unlockOnSkillLevel": 9,
 
       "hairType": "base",
       "hairColor": "#E51C53",
@@ -89,7 +89,7 @@
     },
     "supersaiyanblue": {
       "name": "supersaiyanblue",
-      "unlockOnSkillLevel": 2,
+      "unlockOnSkillLevel": 10,
 
       "hairType": "ssj",
       "hairColor": "#3BE4FF",
@@ -163,7 +163,7 @@
     },
     "supersaiyanblueevolved": {
       "name": "supersaiyanblueevolved",
-      "unlockOnSkillLevel": 3,
+      "unlockOnSkillLevel": 11,
 
       "hairType": "ssj",
       "hairColor": "#003BFF",

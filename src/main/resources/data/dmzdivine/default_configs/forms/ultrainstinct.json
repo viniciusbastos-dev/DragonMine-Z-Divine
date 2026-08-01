@@ -1,0 +1,166 @@
+{
+  "_comment": "Stack form, same shape as the base mod's own forms/kaioken.json and forms/ultimate.json - lives outside races/ so it shows up next to them instead of inside a race's form menu, with both levels selectable from the same stack-form radial like Kaioken's x2/x3/x4. Two skill levels (500k/1M TP, see DivineFormsInstaller): level 1 unlocks 'sign', level 2 unlocks 'mastered' - no mastery gate between them, just TP. Installed into config/dragonminez/forms/ and wired into skills.json's stackSkills/costs. The auto-dodge itself is not expressed here (FormConfig has no dodge field) - it's implemented in UltraInstinctEvasion, gated on the player's active stack form being this group.",
+  "configVersion": "2.1.3",
+  "groupName": "ultrainstinct",
+  "formType": "ultrainstinct",
+  "forms": {
+    "sign": {
+      "name": "sign",
+      "unlockOnSkillLevel": 1,
+
+      "hairType": "",
+      "hairColor": "",
+      "bodyColor2": "",
+      "eye1Color": "",
+      "eye2Color": "",
+
+      "auraType": "kakarot",
+      "auraLayer": 1,
+      "auraColor": "#F5FBFF",
+      "extraAuraLayer": -1,
+      "extraAuraColor": "#FFFFFF",
+      "extraAuraType": "kakarot",
+
+      "hasLightnings": false,
+      "lightningColor": "",
+
+      "tintColor": "#D8D8E0",
+      "tintIntensity": 0.02,
+
+      "outlineShader": {
+        "enabled": false,
+        "primaryColor": "#C7C7C7",
+        "secondaryColor": "#8A6BFF",
+        "outlineThickness": 1.5
+      },
+
+      "transformationAnimation": "transf.generic",
+      "customModel": "",
+      "keepBaseFormHeadBones": true,
+      "modelScaling": [0.9375, 0.9375, 0.9375],
+
+      "strMultiplier": 1.03,
+      "skpMultiplier": 1.03,
+      "pwrMultiplier": 1.03,
+      "defMultiplier": 1.05,
+      "stmMultiplier": 1.0,
+      "vitMultiplier": 1.0,
+      "eneMultiplier": 1.0,
+      "speedMultiplier": 1.05,
+      "attackSpeed": 1.0,
+
+      "energyDrain": 0.0,
+      "staminaDrain": 0.0,
+      "healthDrain": 0.0,
+      "staminaDrainMultiplier": 1.0,
+
+      "maxMastery": 100.0,
+      "maxStatsMultiplier": 1.2,
+      "maxCostMultiplier": 0.5,
+      "masteryPerHitDealt": 0.015,
+      "masteryPerHitReceived": 0.03,
+      "passiveMasteryEveryFiveSeconds": 0.0015,
+
+      "formRequisite": "",
+      "formRequisiteType": "all",
+      "unlockOnMastery": 0.0,
+
+      "instantTransformOnMastery": 100.0,
+      "allowFreeTransformOnMastery": 100.0,
+      "stackOnMastery": 0.0,
+      "formStackable": true,
+      "stackDrainMultiplier": 1.0,
+      "incompatibleWith": [
+        "ultimate.ultimate",
+        "divineforms.supersaiyangod",
+        "divineforms.supersaiyanblue",
+        "divineforms.supersaiyanblueevolved"
+      ],
+      "shareMasteryWith": [],
+      "shareMasteryMultiplier": 1.0,
+
+      "triggerItemCosts": [],
+      "durationItemCosts": [],
+      "mobEffects": []
+    },
+    "mastered": {
+      "name": "mastered",
+      "unlockOnSkillLevel": 2,
+
+      "hairType": "base",
+      "hairColor": "#E7E7E7",
+      "bodyColor2": "",
+      "eye1Color": "#B9B9B9",
+      "eye2Color": "#B9B9B9",
+
+      "auraType": "god",
+      "auraLayer": 2,
+      "auraColor": "#F5FBFF",
+      "extraAuraLayer": 3,
+      "extraAuraColor": "#8A6BFF",
+      "extraAuraType": "god",
+
+      "hasLightnings": false,
+      "lightningColor": "",
+
+      "tintColor": "#D8D8E0",
+      "tintIntensity": 0.05,
+
+      "outlineShader": {
+        "enabled": false,
+        "primaryColor": "#C7C7C7",
+        "secondaryColor": "#8A6BFF",
+        "outlineThickness": 1.5
+      },
+
+      "transformationAnimation": "transf.generic",
+      "customModel": "buffed",
+      "keepBaseFormHeadBones": false,
+      "modelScaling": [1.0, 1.0, 1.0],
+
+      "strMultiplier": 10.5,
+      "skpMultiplier": 10.5,
+      "pwrMultiplier": 10.5,
+      "defMultiplier": 7.5,
+      "stmMultiplier": 1.0,
+      "vitMultiplier": 1.0,
+      "eneMultiplier": 1.0,
+      "speedMultiplier": 1.3,
+      "attackSpeed": 1.3,
+
+      "energyDrain": 0.0,
+      "staminaDrain": 0.0,
+      "healthDrain": 0.0,
+      "staminaDrainMultiplier": 1.0,
+
+      "maxMastery": 100.0,
+      "maxStatsMultiplier": 1.3,
+      "maxCostMultiplier": 0.5,
+      "masteryPerHitDealt": 0.015,
+      "masteryPerHitReceived": 0.03,
+      "passiveMasteryEveryFiveSeconds": 0.0015,
+
+      "formRequisite": "ultrainstinct.sign",
+      "formRequisiteType": "all",
+      "unlockOnMastery": 100.0,
+
+      "instantTransformOnMastery": 100.0,
+      "allowFreeTransformOnMastery": 100.0,
+      "stackOnMastery": 0.0,
+      "formStackable": true,
+      "stackDrainMultiplier": 1.0,
+      "incompatibleWith": [
+        "ultimate.ultimate",
+        "divineforms.supersaiyangod",
+        "divineforms.supersaiyanblue",
+        "divineforms.supersaiyanblueevolved"
+      ],
+      "shareMasteryWith": [],
+      "shareMasteryMultiplier": 1.0,
+
+      "triggerItemCosts": [],
+      "durationItemCosts": [],
+      "mobEffects": []
+    }
+  }
+}

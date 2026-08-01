@@ -5,6 +5,7 @@ import com.dmzdivine.DivineConfig;
 import com.dmzdivine.network.DivineNetwork;
 import com.dmzdivine.network.S2C.OpenGodRitualS2C;
 import com.dragonminez.common.config.ConfigManager;
+import com.dragonminez.common.config.FormConfig;
 import com.dragonminez.common.config.RaceCharacterConfig;
 import com.dragonminez.common.network.NetworkHandler;
 import com.dragonminez.common.network.S2C.StatsSyncS2C;
@@ -30,14 +31,23 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * Mirrors the base mod's Ultimate ritual flow (Elder Kai): the minigame runs on the
  * client, but the server decides who may start it, tracks who is mid-ritual, and
- * re-validates every prerequisite before granting the skill. The unlock itself is
- * {@code godforms} level 1 - a skill the base mod already understands natively
- * (form JSONs with formType "godforms", divine ki-sense gating, etc.).
+ * re-validates every prerequisite before granting the unlock. Unlike the addon's earlier
+ * approach, the unlock itself is not a separate skill: God/Blue/Blue Evolved live in their own
+ * "divineforms" group but share the Saiyan's "superforms" skill/ladder (levels 9-11, right after
+ * supersaiyan4's level 8) - a group can share a formType/skill with another group while still
+ * rendering as its own sibling branch (see ssgrades.json vs supersaiyan.json in the base mod), so
+ * God shows up next to Mastered in the normal Super Saiyan menu instead of the "Extra Forms"
+ * radial node - that node is hardcoded to the "godforms" formType in the base mod's MoreFormsNode.
+ * Level 9's price is -1 in character.json (see DivineFormsInstaller), which blocks both normal purchase paths in
+ * UpdateSkillC2S, leaving the ritual as the only way in - the same trick the base mod uses for
+ * its own "ultimate" skill.
  */
 @Mod.EventBusSubscriber(modid = DMZDivine.MODID)
 public final class GodRitual {
 
-    public static final String GODFORMS_SKILL = "godforms";
+    private static final String SUPERFORMS_SKILL = "superforms";
+    private static final String GOD_GROUP = "divineforms";
+    private static final String GOD_FORM = "supersaiyangod";
 
     private static final Set<UUID> PENDING = ConcurrentHashMap.newKeySet();
 
@@ -71,22 +81,19 @@ public final class GodRitual {
             if (getBlocker(data) != null) return;
 
             String race = data.getCharacter().getRaceName();
+            int godLevel = requiredGodLevel(race);
 
-            // Skill.setLevel clamps to maxLevel, and for a race form skill that max only comes from the
-            // race's formSkillsCosts prices. Skills.setSkillLevel would create the skill using
-            // Skills.calculateMaxLevel, which reads skills.json's generic cost map - and that map has no
-            // godforms entry (unlike "ultimate", which is why the base mod's Elder Kai ritual can just
-            // call setSkillLevel). Registering the real max first is what keeps level 1 from being
-            // silently clamped to 0.
-            int maxLevel = godformsMaxLevel(race);
-            data.getSkills().registerDefaultSkill(GODFORMS_SKILL, maxLevel);
-            data.getSkills().setSkillLevel(GODFORMS_SKILL, 1);
+            // Skill.setLevel clamps to the Skill's *current* maxLevel, and that max only comes from
+            // character.json's price list length - refreshing it here first is what keeps setting
+            // level 9 from silently clamping back down to 8. Doing this after setSkillLevel (like the
+            // old godforms flow did) would be too late.
             data.updateTransformationSkillLimits(race);
+            data.getSkills().setSkillLevel(SUPERFORMS_SKILL, godLevel);
             data.getResources().removeTrainingPoints(DivineConfig.RITUAL_REQUIRED_TP.get());
 
-            if (data.getSkills().getSkillLevel(GODFORMS_SKILL) < 1) {
-                DMZDivine.LOGGER.error("Failed to grant godforms to {}: level stayed 0 (godforms maxLevel={})",
-                        player.getGameProfile().getName(), maxLevel);
+            if (data.getSkills().getSkillLevel(SUPERFORMS_SKILL) < godLevel) {
+                DMZDivine.LOGGER.error("Failed to grant Super Saiyan God to {}: superforms stayed at {} (needed {})",
+                        player.getGameProfile().getName(), data.getSkills().getSkillLevel(SUPERFORMS_SKILL), godLevel);
                 player.sendSystemMessage(Component.translatable("message.dmzdivine.ritual.misconfigured")
                         .withStyle(ChatFormatting.RED));
                 return;
@@ -104,11 +111,13 @@ public final class GodRitual {
 
     /** Returns the reason this player cannot attempt the ritual, or null if allowed. */
     private static Component getBlocker(StatsData data) {
-        if (data.getSkills().getSkillLevel(GODFORMS_SKILL) >= 1) {
+        String race = data.getCharacter().getRaceName();
+        int godLevel = requiredGodLevel(race);
+
+        if (godLevel > 0 && data.getSkills().getSkillLevel(SUPERFORMS_SKILL) >= godLevel) {
             return Component.translatable("message.dmzdivine.ritual.already");
         }
 
-        String race = data.getCharacter().getRaceName();
         String raceLower = race != null ? race.toLowerCase(Locale.ROOT) : "";
         boolean raceAllowed = DivineConfig.RITUAL_RACES.get().stream()
                 .anyMatch(allowed -> allowed.equalsIgnoreCase(raceLower));
@@ -116,11 +125,14 @@ public final class GodRitual {
             return Component.translatable("message.dmzdivine.ritual.wrong_race");
         }
 
-        // Refuse up front rather than after the whole minigame: without prices for godforms in the
-        // race's character.json the skill's max level is 0 and the unlock cannot be stored.
-        if (godformsMaxLevel(race) < 1) {
-            DMZDivine.LOGGER.error("godforms has no prices in config/dragonminez/races/{}/character.json "
-                    + "- the ritual cannot grant the skill. See docs/reference-configs/README.md", raceLower);
+        // Refuse up front rather than after the whole minigame: without an unlockOnSkillLevel on
+        // supersaiyangod, or without enough price levels to cover it, the unlock cannot be stored.
+        RaceCharacterConfig charConfig = ConfigManager.getRaceCharacter(race);
+        Integer[] prices = charConfig != null ? charConfig.getFormSkillTpCosts(SUPERFORMS_SKILL) : null;
+        if (godLevel < 1 || prices == null || prices.length < godLevel) {
+            DMZDivine.LOGGER.error("supersaiyangod needs superforms level {} but races/{}/character.json only has {} "
+                            + "price levels - the ritual cannot grant it. See docs/reference-configs/README.md",
+                    godLevel, raceLower, prices != null ? prices.length : 0);
             return Component.translatable("message.dmzdivine.ritual.misconfigured");
         }
 
@@ -142,12 +154,11 @@ public final class GodRitual {
         return null;
     }
 
-    /** Max level the godforms skill can reach for this race, i.e. how many TP prices it defines. */
-    private static int godformsMaxLevel(String race) {
-        RaceCharacterConfig charConfig = ConfigManager.getRaceCharacter(race);
-        if (charConfig == null) return 0;
-        Integer[] prices = charConfig.getFormSkillTpCosts(GODFORMS_SKILL);
-        return prices != null ? prices.length : 0;
+    /** The superforms skill level supersaiyangod is configured to unlock at, or 0 if misconfigured. */
+    private static int requiredGodLevel(String race) {
+        FormConfig config = ConfigManager.getFormGroup(race, GOD_GROUP);
+        FormConfig.FormData form = config != null ? config.getForm(GOD_FORM) : null;
+        return form != null ? form.getUnlockOnSkillLevel() : 0;
     }
 
     @SubscribeEvent

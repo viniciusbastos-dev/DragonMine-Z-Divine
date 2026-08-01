@@ -70,6 +70,10 @@ public final class DivineTransformParticles {
             } else if (chargingDivine.contains(player.getUUID()) && hasDivineFormActive(data)) {
                 spawnLandingBurst(player, data);
             }
+
+            if (isUltraInstinctMastered(data)) {
+                spawnAmbientMastered(player, data);
+            }
         }
 
         chargingDivine.clear();
@@ -115,6 +119,39 @@ public final class DivineTransformParticles {
             // Drift inward and up: the ki is being pulled into the player, not thrown off them.
             particle.setParticleSpeed(-offsetX * 0.06, 0.02 + random.nextDouble() * 0.03, -offsetZ * 0.06);
         }
+    }
+
+    /** Ultra Instinct Mastered is a stack form, not a primary one, so it never goes through
+     * isChargingDivineForm/hasDivineFormActive above (those only look at the primary form slot) -
+     * this ambient trickle runs independently, for as long as the stack form is active, charging
+     * or not. Sign is deliberately excluded: it's meant to be nearly invisible. */
+    private static boolean isUltraInstinctMastered(StatsData data) {
+        Character character = data.getCharacter();
+        return character.hasActiveStackForm()
+                && "ultrainstinct".equalsIgnoreCase(character.getActiveStackFormGroup())
+                && "mastered".equalsIgnoreCase(character.getActiveStackForm());
+    }
+
+    private static void spawnAmbientMastered(Player player, StatsData data) {
+        FormConfig.FormData formData = data.getCharacter().getActiveStackFormData();
+        float[] rgb = formData != null ? formData.getRgbAuraColor() : null;
+        if (rgb == null) rgb = ColorUtils.hexToRgb(DivineConfig.TRANSFORM_PARTICLE_COLOR.get());
+        if (rgb == null) return;
+
+        RandomSource random = player.getRandom();
+        if (random.nextInt(3) != 0) return; // a light, continuous trickle - not a burst
+
+        double radius = 0.3 + random.nextDouble() * 0.5;
+        double angle = random.nextDouble() * Math.PI * 2.0;
+        double offsetX = Math.cos(angle) * radius;
+        double offsetZ = Math.sin(angle) * radius;
+        double y = player.getY() + random.nextDouble() * 1.9;
+
+        DivineParticle particle = spawn(player.getX() + offsetX, y, player.getZ() + offsetZ, rgb);
+        if (particle == null) return;
+        particle.resize(0.6f);
+        // Gentle upward drift off the body, unlike the charge-up's inward pull or the burst's outward throw.
+        particle.setParticleSpeed(offsetX * 0.01, 0.03 + random.nextDouble() * 0.02, offsetZ * 0.01);
     }
 
     private static void spawnLandingBurst(Player player, StatsData data) {

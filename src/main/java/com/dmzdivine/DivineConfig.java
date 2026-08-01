@@ -25,6 +25,13 @@ public class DivineConfig {
     public static final ForgeConfigSpec.IntValue MINIGAME_REQUIRED_SUCCESSES;
     public static final ForgeConfigSpec.IntValue MINIGAME_ALLOWED_MISSES;
 
+    // --- Ultra Instinct auto-dodge tuning (server-side) ---
+    public static final ForgeConfigSpec.DoubleValue UI_MASTERY_WEIGHT;
+    public static final ForgeConfigSpec.DoubleValue UI_VIT_WEIGHT;
+    public static final ForgeConfigSpec.IntValue UI_VIT_REFERENCE;
+    public static final ForgeConfigSpec.ConfigValue<String> UI_DODGE_RESOURCE;
+    public static final ForgeConfigSpec.IntValue UI_DODGE_COST;
+
     // --- Divine transformation visuals (client-side) ---
     public static final ForgeConfigSpec.BooleanValue TRANSFORM_PARTICLES;
     public static final ForgeConfigSpec.ConfigValue<String> TRANSFORM_PARTICLE_COLOR;
@@ -89,6 +96,30 @@ public class DivineConfig {
         MINIGAME_ALLOWED_MISSES = BUILDER
                 .comment("Misses tolerated before the ritual fails.")
                 .defineInRange("allowedMisses", 2, 0, 50);
+
+        BUILDER.pop();
+        BUILDER.comment("Ultra Instinct - auto-dodge tuning (server-side)").push("ultra_instinct");
+
+        UI_MASTERY_WEIGHT = BUILDER
+                .comment("Share of the dodge chance driven by mastery of the active ultrainstinct form",
+                        "(0.0-1.0). Mastery and VIT weights are meant to add up to 1.0: mastery alone caps",
+                        "here, it never reaches 100% by itself - VIT below fills the rest.")
+                .defineInRange("masteryWeight", 0.40, 0.0, 1.0);
+        UI_VIT_WEIGHT = BUILDER
+                .comment("Share of the dodge chance driven by the VIT stat (0.0-1.0). See masteryWeight.")
+                .defineInRange("vitWeight", 0.60, 0.0, 1.0);
+        UI_VIT_REFERENCE = BUILDER
+                .comment("VIT value that counts as a full investment for vitWeight's bonus (VIT beyond this",
+                        "doesn't add more chance).")
+                .defineInRange("vitReference", 2500, 1, Integer.MAX_VALUE);
+        UI_DODGE_RESOURCE = BUILDER
+                .comment("Resource spent per successful auto-dodge: \"ki\" or \"stamina\".")
+                .define("dodgeResource", "ki");
+        UI_DODGE_COST = BUILDER
+                .comment("Flat cost per successful dodge - intentionally NOT reduced by mastery or anything",
+                        "else. This is the actual balance lever: reaching a high dodge chance only helps if",
+                        "the player has also built enough of the chosen resource pool to sustain it.")
+                .defineInRange("dodgeCost", 30, 0, Integer.MAX_VALUE);
 
         BUILDER.pop();
         BUILDER.comment("Divine transformation visuals (read on the client)").push("divine_visuals");
